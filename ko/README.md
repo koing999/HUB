@@ -2,6 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![GitHub Stars](https://img.shields.io/github/stars/koing999/HUB?style=social)](https://github.com/koing999/HUB)
+![Visitors](https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fgithub.com%2Fkoing999%2FHUB&label=방문자&countColor=%23263759&style=flat&labelColor=%23d9e3f0)
 
 **브라우저만 있으면 바로 사용 가능한 투자 분석 도구**  
 설치 불필요 | 완전 무료 | 오픈소스

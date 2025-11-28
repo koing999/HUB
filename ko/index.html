@@ -32,7 +32,6 @@
         .sensitivity-positive { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
         .sensitivity-negative { background: rgba(239, 68, 68, 0.2); color: #f87171; }
         
-        /* 차트 컨테이너 고정 높이 */
         .chart-container {
             position: relative;
             height: 300px;
@@ -45,13 +44,11 @@
             width: 100%;
         }
         
-        /* 테이블 스크롤 */
         .table-scroll {
             max-height: 400px;
             overflow-y: auto;
         }
         
-        /* 스크롤바 스타일 */
         .table-scroll::-webkit-scrollbar {
             width: 8px;
         }
@@ -174,9 +171,15 @@
                                             <input type="number" id="tax_rate" value="25" class="w-full px-2 py-1.5 bg-gray-700 border border-gray-600 rounded-lg mt-1 text-sm">
                                         </div>
                                     </div>
-                                    <div>
-                                        <label class="text-xs text-gray-300">운전자본 비율 (매출 대비 %)</label>
-                                        <input type="number" id="nwc_rate" value="10" step="0.1" class="w-full px-2 py-1.5 bg-gray-700 border border-gray-600 rounded-lg mt-1 text-sm">
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <div>
+                                            <label class="text-xs text-gray-300">CAPEX (매출 대비 %)</label>
+                                            <input type="number" id="capex_rate" value="5" step="0.1" class="w-full px-2 py-1.5 bg-gray-700 border border-gray-600 rounded-lg mt-1 text-sm">
+                                        </div>
+                                        <div>
+                                            <label class="text-xs text-gray-300">운전자본 비율 (매출 대비 %)</label>
+                                            <input type="number" id="nwc_rate" value="10" step="0.1" class="w-full px-2 py-1.5 bg-gray-700 border border-gray-600 rounded-lg mt-1 text-sm">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -334,7 +337,7 @@
                         <p class="text-xs text-purple-200 mt-1">년</p>
                     </div>
                     <div id="verdict-card" class="bg-gradient-to-br from-gray-600 to-gray-700 p-4 rounded-xl text-center">
-                        <p class="text-sm text-gray-200">판정</p>
+                        <p class="text-sm text-gray-200">투자 판정</p>
                         <p id="verdict-value" class="text-2xl font-bold mt-1">-</p>
                     </div>
                 </div>
@@ -367,7 +370,6 @@
                                 </tr>
                             </thead>
                             <tbody id="scenario-table-body" class="divide-y divide-gray-700">
-                                <!-- 동적 생성 -->
                             </tbody>
                         </table>
                     </div>
@@ -389,7 +391,6 @@
                                 </tr>
                             </thead>
                             <tbody id="sensitivity-table-body" class="divide-y divide-gray-700">
-                                <!-- 동적 생성 -->
                             </tbody>
                         </table>
                     </div>
@@ -400,7 +401,6 @@
                     <h2 class="text-lg font-semibold mb-3 text-orange-300">🎯🎯 2-Way 민감도 분석 (매출 × WACC)</h2>
                     <div class="overflow-x-auto">
                         <table id="sensitivity-2way-table" class="sensitivity-table w-full">
-                            <!-- 동적 생성 -->
                         </table>
                     </div>
                     <p class="text-xs text-gray-400 mt-2">* 녹색: NPV > 0 (투자 가능), 빨간색: NPV < 0 (투자 불가)</p>
@@ -426,13 +426,13 @@
                                     <th class="px-2 py-2">영업이익</th>
                                     <th class="px-2 py-2">NOPAT</th>
                                     <th class="px-2 py-2">감가상각</th>
+                                    <th class="px-2 py-2">CAPEX</th>
                                     <th class="px-2 py-2">NWC증가</th>
                                     <th class="px-2 py-2">FCF</th>
                                     <th class="px-2 py-2">할인FCF</th>
                                 </tr>
                             </thead>
                             <tbody id="fcf-table-body" class="divide-y divide-gray-700 text-center">
-                                <!-- 동적 생성 -->
                             </tbody>
                         </table>
                     </div>
@@ -456,6 +456,14 @@
             cashflow: null,
             monteCarlo: null
         };
+
+        // 숫자 포맷 함수 (콤마 추가)
+        function formatNumber(num, decimals = 1) {
+            return num.toLocaleString('ko-KR', { 
+                minimumFractionDigits: decimals, 
+                maximumFractionDigits: decimals 
+            });
+        }
 
         // Toast 알림
         function showToast(message, type = 'success') {
@@ -510,6 +518,7 @@
                     <div>
                         <label class="text-xs text-gray-300">영구성장률 (g) (%)</label>
                         <input type="number" id="growth-rate" value="2" step="0.1" class="w-full px-2 py-1.5 bg-gray-700 border border-gray-600 rounded-lg mt-1 text-sm">
+                        <p class="text-xs text-yellow-300 mt-1">⚠️ 주의: WACC가 성장률보다 커야 합니다</p>
                     </div>
                 `;
             } else if (method === 'exit-multiple') {
@@ -693,6 +702,7 @@
             const taxRate = parseFloat(document.getElementById('tax_rate').value) / 100;
             const discountRate = parseFloat(document.getElementById('discount_rate').value) / 100;
             const nwcRate = parseFloat(document.getElementById('nwc_rate').value) / 100;
+            const capexRate = parseFloat(document.getElementById('capex_rate').value) / 100;
             
             const revenues = projectData.revenues.length > 0 ? projectData.revenues : 
                              Array.from({length: period}, (_, i) => {
@@ -710,11 +720,12 @@
                 const operatingProfit = revenue * 0.2;
                 const nopat = operatingProfit * (1 - taxRate);
                 
+                const capex = revenue * capexRate;
                 const currentNWC = revenue * nwcRate;
                 const nwcIncrease = currentNWC - prevNWC;
                 prevNWC = currentNWC;
                 
-                let fcf = nopat + depreciation - nwcIncrease;
+                let fcf = nopat + depreciation - capex - nwcIncrease;
                 
                 if (year === period) {
                     fcf += currentNWC;
@@ -735,6 +746,7 @@
                 const taxRate = parseFloat(document.getElementById('tax_rate').value) / 100;
                 const discountRate = parseFloat(document.getElementById('discount_rate').value) / 100;
                 const nwcRate = parseFloat(document.getElementById('nwc_rate').value) / 100;
+                const capexRate = parseFloat(document.getElementById('capex_rate').value) / 100;
                 
                 if (projectData.revenues.length === 0) {
                     generateRevenue();
@@ -752,11 +764,12 @@
                     const operatingProfit = revenue * operatingMargin;
                     const nopat = operatingProfit * (1 - taxRate);
                     
+                    const capex = revenue * capexRate;
                     const currentNWC = revenue * nwcRate;
                     const nwcIncrease = currentNWC - prevNWC;
                     prevNWC = currentNWC;
                     
-                    let fcf = nopat + depreciation - nwcIncrease;
+                    let fcf = nopat + depreciation - capex - nwcIncrease;
                     
                     if (year === period) {
                         const tvMethod = document.getElementById('tv-method').value;
@@ -766,7 +779,14 @@
                             residual = parseFloat(document.getElementById('liquidation-value').value);
                         } else if (tvMethod === 'perpetual') {
                             const g = parseFloat(document.getElementById('growth-rate').value) / 100;
-                            const normalizedFCF = nopat + depreciation;
+                            
+                            // 유효성 검사: WACC > 성장률
+                            if (discountRate <= g) {
+                                showToast('오류: WACC가 성장률보다 커야 합니다', 'error');
+                                return;
+                            }
+                            
+                            const normalizedFCF = nopat + depreciation - capex;
                             const terminalValue = normalizedFCF * (1 + g) / (discountRate - g);
                             residual = terminalValue + currentNWC;
                         } else if (tvMethod === 'exit-multiple') {
@@ -788,6 +808,7 @@
                         operatingProfit,
                         nopat,
                         depreciation,
+                        capex,
                         nwcIncrease,
                         fcf,
                         discountedFCF
@@ -809,22 +830,20 @@
                     }
                 }
                 
-                // 손익분기점 계산 (누적 영업이익이 초기투자금 회수)
+                // 손익분기점 계산
                 let cumulativeProfit = 0;
                 let bep = period;
                 for (let i = 0; i < fcfData.length; i++) {
-                    // 영업이익 누적 (NOPAT + 감가상각)
                     cumulativeProfit += fcfData[i].nopat + fcfData[i].depreciation;
                     
-                    // 초기투자금 회수 여부 확인
                     if (cumulativeProfit >= initialInvestment) {
                         bep = i + 1;
                         break;
                     }
                 }
                 
-                document.getElementById('npv-value').textContent = npv.toFixed(1);
-                document.getElementById('irr-value').textContent = irr.toFixed(2);
+                document.getElementById('npv-value').textContent = formatNumber(npv);
+                document.getElementById('irr-value').textContent = formatNumber(irr, 2);
                 document.getElementById('payback-value').textContent = paybackPeriod;
                 document.getElementById('bep-value').textContent = bep;
                 
@@ -875,14 +894,14 @@
                     let value;
                     
                     if (metric.key === 'npv') {
-                        value = (baseNPV * multiplier).toFixed(1);
+                        value = formatNumber(baseNPV * multiplier);
                     } else if (metric.key === 'irr') {
-                        value = (baseIRR * multiplier).toFixed(2);
+                        value = formatNumber(baseIRR * multiplier, 2);
                     } else {
                         value = Math.max(1, Math.floor(5 / multiplier));
                     }
                     
-                    const color = parseFloat(value) > 0 ? 'text-green-400' : 'text-red-400';
+                    const color = parseFloat(value.toString().replace(/,/g, '')) > 0 ? 'text-green-400' : 'text-red-400';
                     cells += `<td class="px-4 py-2 text-center ${color}">${value}</td>`;
                 });
                 
@@ -929,7 +948,7 @@
                     document.getElementById(variable.id).value = originalValue;
                     
                     const color = npv > 0 ? 'text-green-400' : 'text-red-400';
-                    cells += `<td class="px-4 py-2 text-center ${color}">${npv.toFixed(1)}</td>`;
+                    cells += `<td class="px-4 py-2 text-center ${color}">${formatNumber(npv)}</td>`;
                 });
                 
                 row.innerHTML = cells;
@@ -960,7 +979,7 @@
             const originalWACC = document.getElementById('discount_rate').value;
             
             revenueVariations.forEach(rv => {
-                const revenueValue = (baseRevenue * (1 + rv)).toFixed(0);
+                const revenueValue = formatNumber(baseRevenue * (1 + rv), 0);
                 let row = `<tr><td>${revenueValue}억</td>`;
                 
                 waccVariations.forEach(wv => {
@@ -970,7 +989,7 @@
                     const npv = quickCalculateNPV();
                     
                     const cellClass = npv > 0 ? 'sensitivity-positive' : 'sensitivity-negative';
-                    row += `<td class="${cellClass}">${npv.toFixed(0)}</td>`;
+                    row += `<td class="${cellClass}">${formatNumber(npv, 0)}</td>`;
                 });
                 
                 row += '</tr>';
@@ -994,7 +1013,7 @@
                 data: {
                     labels: fcfData.map(d => `Y${d.year}`),
                     datasets: [{
-                        label: 'FCF',
+                        label: 'FCF (억원)',
                         data: fcfData.map(d => d.fcf),
                         backgroundColor: 'rgba(59, 130, 246, 0.6)',
                         borderColor: 'rgba(59, 130, 246, 1)',
@@ -1010,7 +1029,12 @@
                     scales: {
                         y: {
                             beginAtZero: true,
-                            ticks: { color: '#94a3b8' },
+                            ticks: { 
+                                color: '#94a3b8',
+                                callback: function(value) {
+                                    return formatNumber(value, 0) + '억';
+                                }
+                            },
                             grid: { color: '#334155' }
                         },
                         x: {
@@ -1031,13 +1055,14 @@
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td class="px-2 py-2">${data.year}</td>
-                    <td class="px-2 py-2">${data.revenue.toFixed(1)}</td>
-                    <td class="px-2 py-2">${data.operatingProfit.toFixed(1)}</td>
-                    <td class="px-2 py-2">${data.nopat.toFixed(1)}</td>
-                    <td class="px-2 py-2">${data.depreciation.toFixed(1)}</td>
-                    <td class="px-2 py-2">${data.nwcIncrease.toFixed(1)}</td>
-                    <td class="px-2 py-2 font-bold">${data.fcf.toFixed(1)}</td>
-                    <td class="px-2 py-2 text-blue-400">${data.discountedFCF.toFixed(1)}</td>
+                    <td class="px-2 py-2">${formatNumber(data.revenue)}</td>
+                    <td class="px-2 py-2">${formatNumber(data.operatingProfit)}</td>
+                    <td class="px-2 py-2">${formatNumber(data.nopat)}</td>
+                    <td class="px-2 py-2">${formatNumber(data.depreciation)}</td>
+                    <td class="px-2 py-2">${formatNumber(data.capex)}</td>
+                    <td class="px-2 py-2">${formatNumber(data.nwcIncrease)}</td>
+                    <td class="px-2 py-2 font-bold">${formatNumber(data.fcf)}</td>
+                    <td class="px-2 py-2 text-blue-400">${formatNumber(data.discountedFCF)}</td>
                 `;
                 tbody.appendChild(row);
             });
@@ -1074,19 +1099,19 @@
             document.getElementById('mc-stats').innerHTML = `
                 <div class="bg-gray-700 p-2 rounded-lg">
                     <p class="text-xs text-gray-400">평균 NPV</p>
-                    <p class="text-base font-bold">${mean.toFixed(1)}</p>
+                    <p class="text-base font-bold">${formatNumber(mean)}억</p>
                 </div>
                 <div class="bg-gray-700 p-2 rounded-lg">
                     <p class="text-xs text-gray-400">P10</p>
-                    <p class="text-base font-bold">${p10.toFixed(1)}</p>
+                    <p class="text-base font-bold">${formatNumber(p10)}억</p>
                 </div>
                 <div class="bg-gray-700 p-2 rounded-lg">
                     <p class="text-xs text-gray-400">P50</p>
-                    <p class="text-base font-bold">${p50.toFixed(1)}</p>
+                    <p class="text-base font-bold">${formatNumber(p50)}억</p>
                 </div>
                 <div class="bg-gray-700 p-2 rounded-lg">
                     <p class="text-xs text-gray-400">P90</p>
-                    <p class="text-base font-bold">${p90.toFixed(1)}</p>
+                    <p class="text-base font-bold">${formatNumber(p90)}억</p>
                 </div>
             `;
             
@@ -1107,7 +1132,7 @@
             charts.monteCarlo = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: histogram.map((_, i) => ((Math.min(...results) + binSize * i)).toFixed(0)),
+                    labels: histogram.map((_, i) => formatNumber((Math.min(...results) + binSize * i), 0)),
                     datasets: [{
                         label: '빈도',
                         data: histogram,
@@ -1122,7 +1147,17 @@
                     plugins: { legend: { display: false } },
                     scales: {
                         y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
-                        x: { ticks: { color: '#94a3b8', maxRotation: 45, minRotation: 45 }, grid: { color: '#334155' } }
+                        x: { 
+                            ticks: { 
+                                color: '#94a3b8', 
+                                maxRotation: 45, 
+                                minRotation: 45,
+                                callback: function(value, index) {
+                                    return this.getLabelForValue(value) + '억';
+                                }
+                            }, 
+                            grid: { color: '#334155' } 
+                        }
                     }
                 }
             });
@@ -1245,11 +1280,11 @@
             const wb = XLSX.utils.book_new();
             
             const fcfData = [
-                ['연도', '매출', '영업이익', 'NOPAT', '감가상각', 'NWC증가', 'FCF', '할인FCF']
+                ['연도', '매출', '영업이익', 'NOPAT', '감가상각', 'CAPEX', 'NWC증가', 'FCF', '할인FCF']
             ];
             
             Array.from(tbody.children).forEach(row => {
-                const cells = Array.from(row.children).map(cell => cell.textContent.trim());
+                const cells = Array.from(row.children).map(cell => cell.textContent.trim().replace(/,/g, ''));
                 fcfData.push(cells);
             });
             
@@ -1260,8 +1295,8 @@
                 ['투자 경제성 분석 요약'],
                 [''],
                 ['지표', '값', '단위'],
-                ['NPV', document.getElementById('npv-value').textContent, '억원'],
-                ['IRR', document.getElementById('irr-value').textContent, '%'],
+                ['NPV', document.getElementById('npv-value').textContent.replace(/,/g, ''), '억원'],
+                ['IRR', document.getElementById('irr-value').textContent.replace(/,/g, ''), '%'],
                 ['회수기간', document.getElementById('payback-value').textContent, '년'],
                 ['손익분기', document.getElementById('bep-value').textContent, '년'],
                 ['판정', document.getElementById('verdict-value').textContent, '']

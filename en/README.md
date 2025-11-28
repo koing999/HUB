@@ -259,9 +259,7 @@ Find this project helpful? ☕
 ### ⚡ Quick Support (PayPal)
 Support from anywhere in the world, instantly!
 
-<a href="https://paypal.me/LOCUJO" target="_blank">
-  <img src="https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white" alt="Support via PayPal">
-</a>
+[![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/LOCUJO)
 
 👉 **[paypal.me/LOCUJO](https://paypal.me/LOCUJO)**
 

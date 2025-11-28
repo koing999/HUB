@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Análise de Investimento - Grátis</title>
+    <meta name="description" content="Ferramenta gratuita para análise de investimento. VPL, TIR, Simulação Monte Carlo em 30 segundos. Para empreendedores do Brasil e Portugal.">
+    <meta name="keywords" content="VPL, TIR, análise investimento, startup, Brasil, Portugal, grátis">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Painel de Análise de Investimento - Grátis">
+    <meta property="og:description" content="Complete sua análise de investimento em 30 segundos. VPL, TIR, Monte Carlo automático.">
+    <meta property="og:image" content="https://hub-nu-seven.vercel.app/assets/og-image-pt.png">
+    <meta property="og:url" content="https://hub-nu-seven.vercel.app/pt/">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- SheetJS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <style>
+        body { 
+            font-family: 'SF Pro Display', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+        }
+        .glass-effect {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+        }
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #10b981;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: bold;
+            z-index: 1000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        .toast.show { transform: translateX(0); }
+        
+        .heatmap-cell {
+            transition: all 0.2s ease;
+        }
+        .heatmap-cell:hover {
+            transform: scale(1.05);
+            z-index: 10;
+        }
+    </style>
+</head>
+<body class="min-h-screen text-white">
+    <!-- Header -->
+    <div class="glass-effect sticky top-0 z-50 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-gradient-to-r from-green-500 to-blue-600 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-chart-line text-white"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold">Painel de Análise de Investimento</h1>
+                    <p class="text-xs text-gray-400">Brasil & Portugal • v2.5</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="https://github.com/koing999/HUB" target="_blank" class="text-gray-400 hover:text-white">
+                    <i class="fab fa-github text-xl"></i>
+                </a>
+                <div class="flex gap-2">
+                    <a href="../index.html" class="px-3 py-1 text-xs bg-slate-700 rounded">🇰🇷 한국어</a>
+                    <a href="../en/index.html" class="px-3 py-1 text-xs bg-slate-700 rounded">🇺🇸 English</a>
+                    <a href="../es/index.html" class="px-3 py-1 text-xs bg-slate-700 rounded">🇪🇸 Español</a>
+                    <span class="px-3 py-1 text-xs bg-green-600 rounded">🇧🇷 Português</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto p-6 space-y-8">
+        
+        <!-- Hero Section -->
+        <div class="text-center py-12">
+            <h2 class="text-4xl font-bold mb-4 bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent">
+                Complete sua análise em 30 segundos
+            </h2>
+            <p class="text-xl text-gray-300 mb-6">VPL, TIR, Monte Carlo automático. Sem Excel, sem fórmulas quebradas.</p>
+            <div class="flex justify-center gap-6 text-sm text-gray-400">
+                <span>✅ 100% Gratuito</span>
+                <span>✅ Sem cadastro</span>
+                <span>✅ Código aberto</span>
+                <span>✅ Dados seguros (local)</span>
+            </div>
+        </div>
+
+        <!-- Currency Selection - RHINO REVOLVER -->
+        <div class="mb-5 p-4 bg-slate-800/80 rounded-xl border border-slate-600 shadow-lg">
+            <div class="flex justify-between items-center mb-3">
+                <label class="text-sm font-bold text-green-400 flex items-center gap-2">
+                    <i class="fas fa-coins"></i> Modo de Moeda
+                </label>
+                <span class="text-xs text-gray-500 font-mono">CAL. MULTI</span>
+            </div>
+            
+            <div class="grid grid-cols-4 gap-2">
+                <button onclick="changeCurrency('R$')" class="currency-trigger px-3 py-2 bg-green-600 text-white rounded-lg text-sm font-bold border border-green-500 shadow-md transition hover:scale-105" data-val="R$">
+                    R$ BRL
+                </button>
+                <button onclick="changeCurrency('€')" class="currency-trigger px-3 py-2 bg-slate-700 text-gray-300 rounded-lg text-sm font-bold border border-slate-600 hover:bg-slate-600 transition" data-val="€">
+                    € EUR
+                </button>
+                <button onclick="changeCurrency('$')" class="currency-trigger px-3 py-2 bg-slate-700 text-gray-300 rounded-lg text-sm font-bold border border-slate-600 hover:bg-slate-600 transition" data-val="$">
+                    $ USD
+                </button>
+                <button onclick="changeCurrency('₩')" class="currency-trigger px-3 py-2 bg-slate-700 text-gray-300 rounded-lg text-sm font-bold border border-slate-600 hover:bg-slate-600 transition" data-val="₩">
+                    ₩ KRW
+                </button>
+            </div>
+        </div>
+
+        <!-- Basic Settings -->
+        <div id="content-basic" class="glass-effect p-6 rounded-xl">
+            <h3 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                <i class="fas fa-cog text-green-400"></i>
+                Configuração Básica
+            </h3>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Left Column -->
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Receita Ano Base (milhões)</label>
+                        <input type="number" id="base-revenue" value="100" class="w-full p-3 bg-slate-700 border border-slate-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Taxa de Crescimento Anual (%)</label>
+                        <input type="number" id="growth-rate" value="15" step="0.1" class="w-full p-3 bg-slate-700 border border-slate-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Margem Operacional (%)</label>
+                        <input type="number" id="operating-margin" value="20" step="0.1" class="w-full p-3 bg-slate-700 border border-slate-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Taxa de Impostos (%)</label>
+                        <input type="number" id="tax-rate" value="25" step="0.1" class="w-full p-3 bg-slate-700 border border-slate-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                    </div>
+                </div>
+                
+                <!-- Right Column -->
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">WACC - Custo de Capital (%)</label>
+                        <input type="number" id="discount-rate" value="12" step="0.1" class="w-full p-3 bg-slate-700 border border-slate-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Período de Projeção (anos)</label>
+                        <input type="number" id="projection-years" value="5" min="3" max="10" class="w-full p-3 bg-slate-700 border border-slate-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Taxa de Depreciação (%)</label>
+                        <input type="number" id="depreciation-rate" value="5" step="0.1" class="w-full p-3 bg-slate-700 border border-slate-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">CAPEX como % da Receita</label>
+                        <input type="number" id="capex-rate" value="3" step="0.1" class="w-full p-3 bg-slate-700 border border-slate-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8 text-center">
+                <button onclick="calculate()" class="px-8 py-3 bg-gradient-to-r from-green-500 to-blue-600 rounded-lg font-bold hover:from-green-600 hover:to-blue-700 transition-all transform hover:scale-105 shadow-lg">
+                    <i class="fas fa-calculator mr-2"></i>
+                    Calcular VPL & TIR
+                </button>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="results-section" class="hidden space-y-6">
+            
+            <!-- KPI Cards -->
+            <div class="grid md:grid-cols-4 gap-6">
+                <div class="glass-effect p-6 rounded-xl text-center">
+                    <div class="text-3xl font-bold text-green-400 mb-2" id="npv-value">R$0</div>
+                    <div class="text-gray-300 font-medium">VPL (Valor Presente Líquido)</div>
+                    <div class="text-xs text-gray-500 mt-1">Net Present Value</div>
+                </div>
+                <div class="glass-effect p-6 rounded-xl text-center">
+                    <div class="text-3xl font-bold text-blue-400 mb-2" id="irr-value">0%</div>
+                    <div class="text-gray-300 font-medium">TIR (Taxa Interna de Retorno)</div>
+                    <div class="text-xs text-gray-500 mt-1">Internal Rate of Return</div>
+                </div>
+                <div class="glass-effect p-6 rounded-xl text-center">
+                    <div class="text-3xl font-bold text-purple-400 mb-2" id="payback-value">0 anos</div>
+                    <div class="text-gray-300 font-medium">Período de Retorno</div>
+                    <div class="text-xs text-gray-500 mt-1">Payback Period</div>
+                </div>
+                <div class="glass-effect p-6 rounded-xl text-center">
+                    <div class="text-3xl font-bold mb-2" id="verdict-value">AVALIAR</div>
+                    <div class="text-gray-300 font-medium">Decisão de Investimento</div>
+                    <div class="text-xs text-gray-500 mt-1">Investment Decision</div>
+                </div>
+            </div>
+
+            <!-- FCF Table -->
+            <div class="glass-effect p-6 rounded-xl">
+                <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                    <i class="fas fa-table text-green-400"></i>
+                    Projeção de Fluxo de Caixa Livre
+                </h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="border-b border-slate-600">
+                                <th class="text-left p-2 text-gray-400">Ano</th>
+                                <th class="text-left p-2 text-gray-400">Receita</th>
+                                <th class="text-left p-2 text-gray-400">EBIT</th>
+                                <th class="text-left p-2 text-gray-400">NOPAT</th>
+                                <th class="text-left p-2 text-gray-400">Depreciação</th>
+                                <th class="text-left p-2 text-gray-400">CAPEX</th>
+                                <th class="text-left p-2 text-green-400">FCL</th>
+                                <th class="text-left p-2 text-green-400">FCL Descontado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="fcf-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="glass-effect p-6 rounded-xl">
+                    <h3 class="text-lg font-bold mb-4">Projeção de Receita</h3>
+                    <canvas id="revenue-chart"></canvas>
+                </div>
+                <div class="glass-effect p-6 rounded-xl">
+                    <h3 class="text-lg font-bold mb-4">Fluxo de Caixa Acumulado</h3>
+                    <canvas id="fcf-chart"></canvas>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Monte Carlo Section -->
+        <div class="glass-effect p-6 rounded-xl">
+            <h3 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                <i class="fas fa-dice text-purple-400"></i>
+                Simulação Monte Carlo
+            </h3>
+            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Volatilidade da Receita (σ %)</label>
+                    <input type="number" id="revenue-volatility" value="20" step="1" class="w-full p-3 bg-slate-700 border border-slate-600 rounded-lg focus:ring-2 focus:ring-purple-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Iterações</label>
+                    <select id="monte-carlo-iterations" class="w-full p-3 bg-slate-700 border border-slate-600 rounded-lg focus:ring-2 focus:ring-purple-500">
+                        <option value="1000">1.000</option>
+                        <option value="5000">5.000</option>
+                        <option value="10000">10.000</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="text-center mb-6">
+                <button onclick="runMonteCarlo()" class="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-600 rounded-lg font-bold hover:from-purple-600 hover:to-pink-700 transition-all transform hover:scale-105">
+                    <i class="fas fa-play mr-2"></i>
+                    Executar Simulação
+                </button>
+            </div>
+
+            <div id="monte-carlo-results" class="hidden">
+                <div class="grid md:grid-cols-3 gap-4 mb-6">
+                    <div class="bg-slate-800 p-4 rounded-lg text-center">
+                        <div class="text-2xl font-bold text-green-400" id="mc-mean">R$0</div>
+                        <div class="text-gray-300">VPL Médio</div>
+                    </div>
+                    <div class="bg-slate-800 p-4 rounded-lg text-center">
+                        <div class="text-2xl font-bold text-yellow-400" id="mc-p50">R$0</div>
+                        <div class="text-gray-300">VPL Mediana (P50)</div>
+                    </div>
+                    <div class="bg-slate-800 p-4 rounded-lg text-center">
+                        <div class="text-2xl font-bold text-red-400" id="mc-risk">0%</div>
+                        <div class="text-gray-300">Risco (VPL < 0)</div>
+                    </div>
+                </div>
+                <div class="bg-slate-800 p-4 rounded-lg">
+                    <canvas id="monte-carlo-chart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sensitivity Analysis -->
+        <div class="glass-effect p-6 rounded-xl">
+            <h3 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                <i class="fas fa-crosshairs text-orange-400"></i>
+                Análise de Sensibilidade (2 Variáveis)
+            </h3>
+            
+            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Faixa Crescimento da Receita (± %)</label>
+                    <input type="number" id="sensitivity-revenue-range" value="5" step="1" class="w-full p-3 bg-slate-700 border border-slate-600 rounded-lg focus:ring-2 focus:ring-orange-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Faixa WACC (± %)</label>
+                    <input type="number" id="sensitivity-wacc-range" value="2" step="0.5" class="w-full p-3 bg-slate-700 border border-slate-600 rounded-lg focus:ring-2 focus:ring-orange-500">
+                </div>
+            </div>
+            
+            <div class="text-center mb-6">
+                <button onclick="runSensitivityAnalysis()" class="px-6 py-3 bg-gradient-to-r from-orange-500 to-red-600 rounded-lg font-bold hover:from-orange-600 hover:to-red-700 transition-all transform hover:scale-105">
+                    <i class="fas fa-search mr-2"></i>
+                    Executar Análise
+                </button>
+            </div>
+
+            <div id="sensitivity-results" class="hidden">
+                <div class="bg-slate-800 p-4 rounded-lg">
+                    <div id="sensitivity-heatmap"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Export Section -->
+        <div class="glass-effect p-6 rounded-xl">
+            <h3 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                <i class="fas fa-download text-green-400"></i>
+                Exportar Resultados
+            </h3>
+            <div class="flex flex-wrap gap-4 justify-center">
+                <button onclick="exportToExcel()" class="px-6 py-3 bg-green-600 hover:bg-green-700 rounded-lg font-bold transition flex items-center gap-2">
+                    <i class="fas fa-file-excel"></i>
+                    Exportar para Excel
+                </button>
+                <button onclick="exportToPDF()" class="px-6 py-3 bg-red-600 hover:bg-red-700 rounded-lg font-bold transition flex items-center gap-2">
+                    <i class="fas fa-file-pdf"></i>
+                    Exportar para PDF
+                </button>
+                <button onclick="saveProject()" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg font-bold transition flex items-center gap-2">
+                    <i class="fas fa-save"></i>
+                    Salvar Projeto
+                </button>
+                <button onclick="document.getElementById('load-project').click()" class="px-6 py-3 bg-purple-600 hover:bg-purple-700 rounded-lg font-bold transition flex items-center gap-2">
+                    <i class="fas fa-folder-open"></i>
+                    Carregar Projeto
+                </button>
+            </div>
+            <input type="file" id="load-project" accept=".json" style="display:none" onchange="loadProject(event)">
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center py-8 text-gray-400">
+            <p class="mb-4">🚀 Ferramenta gratuita para empreendedores do Brasil e Portugal</p>
+            <div class="flex justify-center gap-6 text-sm">
+                <a href="https://github.com/koing999/HUB" target="_blank" class="hover:text-white">🔗 Código fonte</a>
+                <a href="https://paypal.me/LOCUJO" target="_blank" class="hover:text-white">☕ Apoiar projeto</a>
+                <a href="mailto:koing756@naver.com" class="hover:text-white">📧 Contato</a>
+            </div>
+            <p class="text-xs mt-4">v2.5 • MIT License • Feito com ❤️ para a comunidade lusófona</p>
+        </div>
+
+    </div>
+
+    <script>
+        // [RHINO REVOLVER] 🔫 Currency Configuration (Default: BRL for Brazil market)
+        let currentSymbol = "R$"; 
+
+        function changeCurrency(symbol) {
+            currentSymbol = symbol;
+            
+            // 1. Button color change (clicked = green, others = gray)
+            document.querySelectorAll('.currency-trigger').forEach(btn => {
+                if(btn.dataset.val === symbol) {
+                    btn.className = "currency-trigger px-3 py-2 bg-green-600 text-white rounded-lg text-sm font-bold border border-green-500 shadow-md transition transform scale-105";
+                } else {
+                    btn.className = "currency-trigger px-3 py-2 bg-slate-700 text-gray-300 rounded-lg text-sm font-bold border border-slate-600 hover:bg-slate-600 transition";
+                }
+            });
+
+            // 2. Immediate recalculation (screen refresh)
+            if (document.getElementById('results-section').style.display !== 'none') {
+                calculate(); 
+            }
+            
+            // 3. Feedback (Toast)
+            showToast(`Moeda alterada para ${symbol}`);
+        }
+
+        // Global variables
+        let revenueChart, fcfChart, monteCarloChart;
+        let projectData = {};
+
+        // Toast notification
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => toast.classList.add('show'), 100);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => document.body.removeChild(toast), 300);
+            }, 2000);
+        }
+
+        // Main calculation function
+        function calculate() {
+            try {
+                // Get input values
+                const baseRevenue = parseFloat(document.getElementById('base-revenue').value) || 100;
+                const growthRate = parseFloat(document.getElementById('growth-rate').value) / 100 || 0.15;
+                const operatingMargin = parseFloat(document.getElementById('operating-margin').value) / 100 || 0.20;
+                const taxRate = parseFloat(document.getElementById('tax-rate').value) / 100 || 0.25;
+                const discountRate = parseFloat(document.getElementById('discount-rate').value) / 100 || 0.12;
+                const projectionYears = parseInt(document.getElementById('projection-years').value) || 5;
+                const depreciationRate = parseFloat(document.getElementById('depreciation-rate').value) / 100 || 0.05;
+                const capexRate = parseFloat(document.getElementById('capex-rate').value) / 100 || 0.03;
+
+                // Calculate projections
+                const fcfData = [];
+                let totalDiscountedFCF = 0;
+
+                for (let year = 1; year <= projectionYears; year++) {
+                    const revenue = baseRevenue * Math.pow(1 + growthRate, year);
+                    const operatingProfit = revenue * operatingMargin;
+                    const nopat = operatingProfit * (1 - taxRate);
+                    const depreciation = revenue * depreciationRate;
+                    const capex = revenue * capexRate;
+                    const fcf = nopat + depreciation - capex;
+                    const discountedFCF = fcf / Math.pow(1 + discountRate, year);
+                    
+                    totalDiscountedFCF += discountedFCF;
+                    
+                    fcfData.push({
+                        year: year,
+                        revenue: revenue,
+                        operatingProfit: operatingProfit,
+                        nopat: nopat,
+                        depreciation: depreciation,
+                        capex: capex,
+                        fcf: fcf,
+                        discountedFCF: discountedFCF
+                    });
+                }
+
+                // Terminal value (Gordon Growth Model, g = 2%)
+                const terminalGrowthRate = 0.02;
+                const finalYearFCF = fcfData[fcfData.length - 1].fcf;
+                const terminalValue = (finalYearFCF * (1 + terminalGrowthRate)) / (discountRate - terminalGrowthRate);
+                const discountedTerminalValue = terminalValue / Math.pow(1 + discountRate, projectionYears);
+
+                // NPV calculation
+                const npv = totalDiscountedFCF + discountedTerminalValue;
+
+                // IRR calculation (Newton-Raphson method)
+                const irr = calculateIRR(fcfData.map(d => d.fcf), terminalValue);
+
+                // Payback period
+                let cumulativeFCF = 0;
+                let paybackPeriod = projectionYears;
+                for (let i = 0; i < fcfData.length; i++) {
+                    cumulativeFCF += fcfData[i].fcf;
+                    if (cumulativeFCF >= 0) {
+                        paybackPeriod = i + 1;
+                        break;
+                    }
+                }
+
+                // Investment verdict
+                let verdict = "AVALIAR";
+                let verdictClass = "text-yellow-400";
+                if (npv > 0 && irr > discountRate) {
+                    verdict = "INVESTIR";
+                    verdictClass = "text-green-400";
+                } else if (npv < 0 || irr < discountRate * 0.8) {
+                    verdict = "REJEITAR";
+                    verdictClass = "text-red-400";
+                }
+
+                // Update UI with currency symbol
+                document.getElementById('npv-value').textContent = currentSymbol + " " + npv.toLocaleString(undefined, {maximumFractionDigits: 1});
+                document.getElementById('irr-value').textContent = (irr * 100).toFixed(1) + "%";
+                document.getElementById('payback-value').textContent = paybackPeriod.toFixed(1) + " anos";
+                document.getElementById('verdict-value').textContent = verdict;
+                document.getElementById('verdict-value').className = `text-3xl font-bold mb-2 ${verdictClass}`;
+
+                // Update FCF table
+                updateFCFTable(fcfData);
+
+                // Show results
+                document.getElementById('results-section').classList.remove('hidden');
+
+                // Store data for export
+                projectData = {
+                    inputs: {
+                        baseRevenue, growthRate: growthRate * 100, operatingMargin: operatingMargin * 100,
+                        taxRate: taxRate * 100, discountRate: discountRate * 100, projectionYears,
+                        depreciationRate: depreciationRate * 100, capexRate: capexRate * 100
+                    },
+                    results: { npv, irr: irr * 100, paybackPeriod, verdict },
+                    fcfData: fcfData,
+                    currency: currentSymbol
+                };
+
+                // Create charts
+                createCharts(fcfData);
+
+                showToast('Cálculo concluído!');
+
+            } catch (error) {
+                showToast('Erro no cálculo. Verificar dados.');
+                console.error('Calculation error:', error);
+            }
+        }
+
+        // [UPDATE FCF TABLE WITH CURRENCY SYMBOL]
+        function updateFCFTable(fcfData) {
+            const tbody = document.getElementById('fcf-table-body');
+            tbody.innerHTML = '';
+            
+            fcfData.forEach(data => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="px-2 py-2 text-gray-400">${data.year}</td>
+                    <td class="px-2 py-2">${data.revenue.toLocaleString(undefined, {maximumFractionDigits:1})}</td>
+                    <td class="px-2 py-2">${data.operatingProfit.toLocaleString(undefined, {maximumFractionDigits:1})}</td>
+                    <td class="px-2 py-2">${data.nopat.toLocaleString(undefined, {maximumFractionDigits:1})}</td>
+                    <td class="px-2 py-2">${data.depreciation.toLocaleString(undefined, {maximumFractionDigits:1})}</td>
+                    <td class="px-2 py-2 text-red-300">${data.capex ? data.capex.toLocaleString(undefined, {maximumFractionDigits:1}) : '-'}</td>
+                    <td class="px-2 py-2 font-bold text-green-300">${currentSymbol}${data.fcf.toLocaleString(undefined, {maximumFractionDigits:1})}</td>
+                    <td class="px-2 py-2 text-green-400">${currentSymbol}${data.discountedFCF.toLocaleString(undefined, {maximumFractionDigits:1})}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // IRR calculation using Newton-Raphson method
+        function calculateIRR(cashFlows, terminalValue, tolerance = 0.0001, maxIterations = 100) {
+            let irr = 0.15; // Initial guess 15%
+            
+            for (let i = 0; i < maxIterations; i++) {
+                let npv = -Math.abs(cashFlows[0] || 100); // Initial investment (negative)
+                let dnpv = 0;
+                
+                // Add discounted cash flows
+                for (let year = 1; year <= cashFlows.length; year++) {
+                    const cf = cashFlows[year - 1];
+                    npv += cf / Math.pow(1 + irr, year);
+                    dnpv -= year * cf / Math.pow(1 + irr, year + 1);
+                }
+                
+                // Add terminal value
+                npv += terminalValue / Math.pow(1 + irr, cashFlows.length);
+                dnpv -= cashFlows.length * terminalValue / Math.pow(1 + irr, cashFlows.length + 1);
+                
+                if (Math.abs(npv) < tolerance) return irr;
+                
+                irr = irr - npv / dnpv;
+                
+                // Boundary checks
+                if (irr < -0.99) irr = -0.99;
+                if (irr > 10) irr = 10;
+            }
+            
+            return irr;
+        }
+
+        // Create charts
+        function createCharts(fcfData) {
+            // Destroy existing charts
+            if (revenueChart) revenueChart.destroy();
+            if (fcfChart) fcfChart.destroy();
+
+            const years = fcfData.map(d => `Ano ${d.year}`);
+            const revenues = fcfData.map(d => d.revenue);
+            const fcfs = fcfData.map(d => d.fcf);
+
+            // Revenue chart
+            const revenueCtx = document.getElementById('revenue-chart').getContext('2d');
+            revenueChart = new Chart(revenueCtx, {
+                type: 'line',
+                data: {
+                    labels: years,
+                    datasets: [{
+                        label: 'Receita Projetada',
+                        data: revenues,
+                        borderColor: 'rgb(34, 197, 94)',
+                        backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { labels: { color: 'white' } }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { color: 'white' },
+                            grid: { color: 'rgba(148, 163, 184, 0.3)' }
+                        },
+                        x: {
+                            ticks: { color: 'white' },
+                            grid: { color: 'rgba(148, 163, 184, 0.3)' }
+                        }
+                    }
+                }
+            });
+
+            // FCF chart (cumulative)
+            let cumulativeFCF = 0;
+            const cumulativeFCFs = fcfs.map(fcf => cumulativeFCF += fcf);
+
+            const fcfCtx = document.getElementById('fcf-chart').getContext('2d');
+            fcfChart = new Chart(fcfCtx, {
+                type: 'bar',
+                data: {
+                    labels: years,
+                    datasets: [{
+                        label: 'FCL Acumulado',
+                        data: cumulativeFCFs,
+                        backgroundColor: cumulativeFCFs.map(val => 
+                            val >= 0 ? 'rgba(34, 197, 94, 0.8)' : 'rgba(239, 68, 68, 0.8)'
+                        ),
+                        borderColor: cumulativeFCFs.map(val => 
+                            val >= 0 ? 'rgb(34, 197, 94)' : 'rgb(239, 68, 68)'
+                        ),
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { labels: { color: 'white' } }
+                    },
+                    scales: {
+                        y: {
+                            ticks: { color: 'white' },
+                            grid: { color: 'rgba(148, 163, 184, 0.3)' }
+                        },
+                        x: {
+                            ticks: { color: 'white' },
+                            grid: { color: 'rgba(148, 163, 184, 0.3)' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Monte Carlo Simulation
+        function runMonteCarlo() {
+            const iterations = parseInt(document.getElementById('monte-carlo-iterations').value) || 1000;
+            const volatility = parseFloat(document.getElementById('revenue-volatility').value) / 100 || 0.20;
+            
+            const baseRevenue = parseFloat(document.getElementById('base-revenue').value) || 100;
+            const growthRate = parseFloat(document.getElementById('growth-rate').value) / 100 || 0.15;
+            const operatingMargin = parseFloat(document.getElementById('operating-margin').value) / 100 || 0.20;
+            const taxRate = parseFloat(document.getElementById('tax-rate').value) / 100 || 0.25;
+            const discountRate = parseFloat(document.getElementById('discount-rate').value) / 100 || 0.12;
+            const projectionYears = parseInt(document.getElementById('projection-years').value) || 5;
+            const depreciationRate = parseFloat(document.getElementById('depreciation-rate').value) / 100 || 0.05;
+            const capexRate = parseFloat(document.getElementById('capex-rate').value) / 100 || 0.03;
+
+            const npvResults = [];
+
+            for (let i = 0; i < iterations; i++) {
+                let totalDiscountedFCF = 0;
+                let finalYearFCF = 0;
+
+                for (let year = 1; year <= projectionYears; year++) {
+                    // Apply random shock to growth rate
+                    const randomShock = (Math.random() - 0.5) * 2 * volatility; // Normal distribution approximation
+                    const adjustedGrowthRate = growthRate + randomShock;
+                    
+                    const revenue = baseRevenue * Math.pow(1 + adjustedGrowthRate, year);
+                    const operatingProfit = revenue * operatingMargin;
+                    const nopat = operatingProfit * (1 - taxRate);
+                    const depreciation = revenue * depreciationRate;
+                    const capex = revenue * capexRate;
+                    const fcf = nopat + depreciation - capex;
+                    const discountedFCF = fcf / Math.pow(1 + discountRate, year);
+                    
+                    totalDiscountedFCF += discountedFCF;
+                    if (year === projectionYears) finalYearFCF = fcf;
+                }
+
+                // Terminal value
+                const terminalGrowthRate = 0.02;
+                const terminalValue = (finalYearFCF * (1 + terminalGrowthRate)) / (discountRate - terminalGrowthRate);
+                const discountedTerminalValue = terminalValue / Math.pow(1 + discountRate, projectionYears);
+
+                const npv = totalDiscountedFCF + discountedTerminalValue;
+                npvResults.push(npv);
+            }
+
+            // Calculate statistics
+            npvResults.sort((a, b) => a - b);
+            const mean = npvResults.reduce((sum, val) => sum + val, 0) / npvResults.length;
+            const p50 = npvResults[Math.floor(npvResults.length * 0.5)];
+            const riskProbability = npvResults.filter(val => val < 0).length / npvResults.length * 100;
+
+            // Update UI
+            document.getElementById('mc-mean').textContent = currentSymbol + " " + mean.toLocaleString(undefined, {maximumFractionDigits: 1});
+            document.getElementById('mc-p50').textContent = currentSymbol + " " + p50.toLocaleString(undefined, {maximumFractionDigits: 1});
+            document.getElementById('mc-risk').textContent = riskProbability.toFixed(1) + "%";
+
+            // Create histogram
+            createMonteCarloChart(npvResults);
+
+            document.getElementById('monte-carlo-results').classList.remove('hidden');
+            showToast('Simulação Monte Carlo concluída!');
+        }
+
+        function createMonteCarloChart(npvResults) {
+            if (monteCarloChart) monteCarloChart.destroy();
+
+            // Create histogram bins
+            const binCount = 30;
+            const min = Math.min(...npvResults);
+            const max = Math.max(...npvResults);
+            const binWidth = (max - min) / binCount;
+            
+            const bins = Array(binCount).fill(0);
+            const binLabels = [];
+
+            for (let i = 0; i < binCount; i++) {
+                binLabels.push((min + i * binWidth).toFixed(0));
+            }
+
+            npvResults.forEach(npv => {
+                const binIndex = Math.min(Math.floor((npv - min) / binWidth), binCount - 1);
+                bins[binIndex]++;
+            });
+
+            const ctx = document.getElementById('monte-carlo-chart').getContext('2d');
+            monteCarloChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: binLabels,
+                    datasets: [{
+                        label: 'Frequência',
+                        data: bins,
+                        backgroundColor: 'rgba(168, 85, 247, 0.8)',
+                        borderColor: 'rgb(168, 85, 247)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { labels: { color: 'white' } }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { color: 'white' },
+                            grid: { color: 'rgba(148, 163, 184, 0.3)' }
+                        },
+                        x: {
+                            ticks: { color: 'white', maxTicksLimit: 10 },
+                            grid: { color: 'rgba(148, 163, 184, 0.3)' },
+                            title: {
+                                display: true,
+                                text: 'VPL (' + currentSymbol + ')',
+                                color: 'white'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Sensitivity Analysis
+        function runSensitivityAnalysis() {
+            const revenueRange = parseFloat(document.getElementById('sensitivity-revenue-range').value) / 100 || 0.05;
+            const waccRange = parseFloat(document.getElementById('sensitivity-wacc-range').value) / 100 || 0.02;
+            
+            const baseGrowthRate = parseFloat(document.getElementById('growth-rate').value) / 100 || 0.15;
+            const baseWACC = parseFloat(document.getElementById('discount-rate').value) / 100 || 0.12;
+            
+            // Create sensitivity matrix (7x7)
+            const gridSize = 7;
+            const revenueValues = [];
+            const waccValues = [];
+            const npvMatrix = [];
+
+            // Generate parameter ranges
+            for (let i = 0; i < gridSize; i++) {
+                const revenueMultiplier = (i - 3) * (revenueRange / 3);
+                const waccMultiplier = (i - 3) * (waccRange / 3);
+                revenueValues.push(baseGrowthRate + revenueMultiplier);
+                waccValues.push(baseWACC + waccMultiplier);
+            }
+
+            // Calculate NPV for each combination
+            for (let i = 0; i < gridSize; i++) {
+                npvMatrix[i] = [];
+                for (let j = 0; j < gridSize; j++) {
+                    const npv = calculateScenarioNPV(revenueValues[j], waccValues[i]);
+                    npvMatrix[i][j] = npv;
+                }
+            }
+
+            createSensitivityHeatmap(npvMatrix, revenueValues, waccValues);
+            document.getElementById('sensitivity-results').classList.remove('hidden');
+            showToast('Análise de sensibilidade concluída!');
+        }
+
+        function calculateScenarioNPV(growthRate, discountRate) {
+            const baseRevenue = parseFloat(document.getElementById('base-revenue').value) || 100;
+            const operatingMargin = parseFloat(document.getElementById('operating-margin').value) / 100 || 0.20;
+            const taxRate = parseFloat(document.getElementById('tax-rate').value) / 100 || 0.25;
+            const projectionYears = parseInt(document.getElementById('projection-years').value) || 5;
+            const depreciationRate = parseFloat(document.getElementById('depreciation-rate').value) / 100 || 0.05;
+            const capexRate = parseFloat(document.getElementById('capex-rate').value) / 100 || 0.03;
+
+            let totalDiscountedFCF = 0;
+            let finalYearFCF = 0;
+
+            for (let year = 1; year <= projectionYears; year++) {
+                const revenue = baseRevenue * Math.pow(1 + growthRate, year);
+                const operatingProfit = revenue * operatingMargin;
+                const nopat = operatingProfit * (1 - taxRate);
+                const depreciation = revenue * depreciationRate;
+                const capex = revenue * capexRate;
+                const fcf = nopat + depreciation - capex;
+                const discountedFCF = fcf / Math.pow(1 + discountRate, year);
+                
+                totalDiscountedFCF += discountedFCF;
+                if (year === projectionYears) finalYearFCF = fcf;
+            }
+
+            // Terminal value
+            const terminalGrowthRate = 0.02;
+            const terminalValue = (finalYearFCF * (1 + terminalGrowthRate)) / (discountRate - terminalGrowthRate);
+            const discountedTerminalValue = terminalValue / Math.pow(1 + discountRate, projectionYears);
+
+            return totalDiscountedFCF + discountedTerminalValue;
+        }
+
+        function createSensitivityHeatmap(matrix, revenueValues, waccValues) {
+            const container = document.getElementById('sensitivity-heatmap');
+            
+            // Find min/max for color scaling
+            const flatValues = matrix.flat();
+            const minVal = Math.min(...flatValues);
+            const maxVal = Math.max(...flatValues);
+            
+            let html = `
+                <div class="text-center mb-4">
+                    <h4 class="text-lg font-bold text-white">VPL por Crescimento vs WACC</h4>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="mx-auto text-sm">
+                        <thead>
+                            <tr>
+                                <th class="p-2 text-gray-400">WACC \\ Crescimento</th>
+            `;
+            
+            // Revenue headers
+            revenueValues.forEach(val => {
+                html += `<th class="p-2 text-gray-400 text-center">${(val * 100).toFixed(1)}%</th>`;
+            });
+            html += '</tr></thead><tbody>';
+            
+            // Matrix rows
+            matrix.forEach((row, i) => {
+                html += `<tr><td class="p-2 text-gray-400 font-bold">${(waccValues[i] * 100).toFixed(1)}%</td>`;
+                row.forEach(npv => {
+                    // Color based on NPV value
+                    const intensity = (npv - minVal) / (maxVal - minVal);
+                    const red = npv < 0 ? Math.round(255 * (1 - intensity)) : 0;
+                    const green = npv >= 0 ? Math.round(255 * intensity) : 0;
+                    const bgColor = `rgb(${red}, ${green}, 0)`;
+                    const textColor = intensity > 0.5 ? 'white' : 'black';
+                    
+                    html += `<td class="heatmap-cell p-3 text-center font-bold border border-gray-600" 
+                             style="background-color: ${bgColor}; color: ${textColor};">
+                             ${currentSymbol}${npv.toFixed(0)}</td>`;
+                });
+                html += '</tr>';
+            });
+            
+            html += '</tbody></table></div>';
+            container.innerHTML = html;
+        }
+
+        // Export functions
+        function exportToExcel() {
+            if (!projectData.fcfData) {
+                showToast('Executar cálculo primeiro');
+                return;
+            }
+
+            const wb = XLSX.utils.book_new();
+            
+            // Summary sheet
+            const summaryData = [
+                ['Painel de Análise de Investimento - Resumo'],
+                [''],
+                ['RESULTADOS PRINCIPAIS'],
+                ['VPL (Valor Presente Líquido)', projectData.results.npv.toLocaleString() + ' ' + projectData.currency],
+                ['TIR (Taxa Interna Retorno)', projectData.results.irr.toFixed(2) + '%'],
+                ['Período de Retorno', projectData.results.paybackPeriod.toFixed(1) + ' anos'],
+                ['Decisão', projectData.results.verdict],
+                [''],
+                ['PARÂMETROS DE ENTRADA'],
+                ['Receita Base', projectData.inputs.baseRevenue.toLocaleString() + ' milhões ' + projectData.currency],
+                ['Crescimento Anual', projectData.inputs.growthRate.toFixed(1) + '%'],
+                ['Margem Operacional', projectData.inputs.operatingMargin.toFixed(1) + '%'],
+                ['Taxa Impostos', projectData.inputs.taxRate.toFixed(1) + '%'],
+                ['WACC', projectData.inputs.discountRate.toFixed(1) + '%'],
+                ['Período Projeção', projectData.inputs.projectionYears + ' anos']
+            ];
+            const summaryWS = XLSX.utils.aoa_to_sheet(summaryData);
+            XLSX.utils.book_append_sheet(wb, summaryWS, 'Resumo');
+
+            // FCF sheet
+            const fcfHeaders = ['Ano', 'Receita', 'EBIT', 'NOPAT', 'Depreciação', 'CAPEX', 'FCL', 'FCL Descontado'];
+            const fcfData = [fcfHeaders];
+            projectData.fcfData.forEach(row => {
+                fcfData.push([
+                    row.year,
+                    Math.round(row.revenue),
+                    Math.round(row.operatingProfit),
+                    Math.round(row.nopat),
+                    Math.round(row.depreciation),
+                    Math.round(row.capex),
+                    Math.round(row.fcf),
+                    Math.round(row.discountedFCF)
+                ]);
+            });
+            const fcfWS = XLSX.utils.aoa_to_sheet(fcfData);
+            XLSX.utils.book_append_sheet(wb, fcfWS, 'Fluxo de Caixa');
+
+            XLSX.writeFile(wb, `analise_investimento_${new Date().getTime()}.xlsx`);
+            showToast('Arquivo Excel exportado!');
+        }
+
+        function exportToPDF() {
+            if (!projectData.results) {
+                showToast('Executar cálculo primeiro');
+                return;
+            }
+
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Title
+            doc.setFontSize(20);
+            doc.text('Painel de Análise de Investimento', 20, 30);
+            
+            // Results
+            doc.setFontSize(14);
+            doc.text('RESULTADOS PRINCIPAIS', 20, 50);
+            
+            doc.setFontSize(12);
+            doc.text(`VPL: ${projectData.results.npv.toLocaleString()} ${projectData.currency}`, 20, 65);
+            doc.text(`TIR: ${projectData.results.irr.toFixed(2)}%`, 20, 75);
+            doc.text(`Período Retorno: ${projectData.results.paybackPeriod.toFixed(1)} anos`, 20, 85);
+            doc.text(`Decisão: ${projectData.results.verdict}`, 20, 95);
+            
+            // Parameters
+            doc.text('PARÂMETROS DE ENTRADA', 20, 115);
+            doc.text(`Receita Base: ${projectData.inputs.baseRevenue} milhões ${projectData.currency}`, 20, 130);
+            doc.text(`Crescimento: ${projectData.inputs.growthRate.toFixed(1)}%`, 20, 140);
+            doc.text(`WACC: ${projectData.inputs.discountRate.toFixed(1)}%`, 20, 150);
+            
+            // FCF Table
+            doc.text('PROJEÇÃO FLUXO DE CAIXA', 20, 170);
+            
+            let yPos = 185;
+            doc.setFontSize(10);
+            doc.text('Ano  Receita  EBIT  NOPAT  FCL  FCL Desc.', 20, yPos);
+            
+            projectData.fcfData.forEach((row, i) => {
+                yPos += 10;
+                if (yPos > 270) {
+                    doc.addPage();
+                    yPos = 20;
+                }
+                doc.text(
+                    `${row.year}    ${Math.round(row.revenue)}    ${Math.round(row.operatingProfit)}    ${Math.round(row.nopat)}    ${Math.round(row.fcf)}    ${Math.round(row.discountedFCF)}`,
+                    20, yPos
+                );
+            });
+            
+            doc.save(`analise_investimento_${new Date().getTime()}.pdf`);
+            showToast('Arquivo PDF exportado!');
+        }
+
+        function saveProject() {
+            if (!projectData.inputs) {
+                showToast('Executar cálculo primeiro');
+                return;
+            }
+
+            const dataStr = JSON.stringify(projectData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `projeto_investimento_${new Date().getTime()}.json`;
+            link.click();
+            
+            URL.revokeObjectURL(url);
+            showToast('Projeto salvo!');
+        }
+
+        function loadProject(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    
+                    // Load inputs
+                    document.getElementById('base-revenue').value = data.inputs.baseRevenue;
+                    document.getElementById('growth-rate').value = data.inputs.growthRate;
+                    document.getElementById('operating-margin').value = data.inputs.operatingMargin;
+                    document.getElementById('tax-rate').value = data.inputs.taxRate;
+                    document.getElementById('discount-rate').value = data.inputs.discountRate;
+                    document.getElementById('projection-years').value = data.inputs.projectionYears;
+                    document.getElementById('depreciation-rate').value = data.inputs.depreciationRate;
+                    document.getElementById('capex-rate').value = data.inputs.capexRate;
+                    
+                    // Set currency if available
+                    if (data.currency) {
+                        changeCurrency(data.currency);
+                    }
+                    
+                    // Recalculate
+                    calculate();
+                    
+                    showToast('Projeto carregado!');
+                } catch (error) {
+                    showToast('Erro ao carregar arquivo');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            showToast('Painel pronto para análise!');
+        });
+
+    </script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 > 30초 만에 IR 자료를 완성하는 무료 투자분석 도구
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![GitHub stars](https://img.shields.io/github/stars/yourusername/investment-dashboard.svg?style=social&label=Star)](https://github.com/yourusername/investment-dashboard)
+[![GitHub stars](https://img.shields.io/github/stars/koing999/HUB.svg?style=social&label=Star)](https://github.com/koing999/HUB)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 
 [English](#english) | [한국어](#korean)
@@ -31,7 +31,7 @@
 
 ![Dashboard Screenshot](./screenshots/main-dashboard.png)
 
-**👉 [라이브 데모 체험하기](https://investment-dashboard.vercel.app)**
+**👉 [라이브 데모 체험하기](https://github.com/koing999/HUB)** _(Vercel 배포 후 업데이트 예정)_
 
 ---
 
@@ -39,9 +39,7 @@
 
 ### 방법 1: 온라인에서 바로 사용
 
-```
-https://investment-dashboard.vercel.app
-```
+_Vercel 배포 후 URL 업데이트 예정_
 
 링크 클릭만 하면 끝! 설치 필요 없습니다.
 
@@ -49,10 +47,10 @@ https://investment-dashboard.vercel.app
 
 ```bash
 # 1. 저장소 클론
-git clone https://github.com/yourusername/investment-dashboard.git
+git clone https://github.com/koing999/HUB.git
 
 # 2. 폴더 이동
-cd investment-dashboard
+cd HUB
 
 # 3. HTML 파일 열기
 open index.html  # Mac
@@ -186,16 +184,18 @@ open index.html
 
 ## 📞 문의
 
-- 📧 Email: your@email.com
-- 💬 Issues: [GitHub Issues](https://github.com/yourusername/investment-dashboard/issues)
-- 🌐 Website: [투자분석 대시보드](https://investment-dashboard.vercel.app)
-- ☕ 후원: [토스 후원하기](https://toss.me/yourid)
+- 📧 Email: koing756@naver.com
+- 💬 Issues: [GitHub Issues](https://github.com/koing999/HUB/issues)
+- 🌐 GitHub: [HUB Repository](https://github.com/koing999/HUB)
+
+**☕ 도움이 되셨다면?**  
+[카카오페이로 커피 한잔 사주기](https://qr.kakaopay.com/Ej8t3tRhG) _(선택사항)_
 
 ---
 
 ## 🌟 Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=yourusername/investment-dashboard&type=Date)](https://star-history.com/#yourusername/investment-dashboard&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=koing999/HUB&type=Date)](https://star-history.com/#koing999/HUB&Date)
 
 ---
 
@@ -224,9 +224,7 @@ open index.html
 
 ### Method 1: Use Online (Recommended)
 
-```
-https://investment-dashboard.vercel.app
-```
+_URL will be available after Vercel deployment_
 
 Just click and start! No installation required.
 
@@ -234,10 +232,10 @@ Just click and start! No installation required.
 
 ```bash
 # 1. Clone repository
-git clone https://github.com/yourusername/investment-dashboard.git
+git clone https://github.com/koing999/HUB.git
 
 # 2. Navigate to folder
-cd investment-dashboard
+cd HUB
 
 # 3. Open HTML file
 open index.html  # Mac
@@ -289,12 +287,15 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Contact
 
-- 📧 Email: your@email.com
-- 💬 Issues: [GitHub Issues](https://github.com/yourusername/investment-dashboard/issues)
-- 🌐 Website: [Investment Dashboard](https://investment-dashboard.vercel.app)
+- 📧 Email: koing756@naver.com
+- 💬 Issues: [GitHub Issues](https://github.com/koing999/HUB/issues)
+- 🌐 GitHub: [HUB Repository](https://github.com/koing999/HUB)
+
+**☕ Found this helpful?**  
+[Buy me a coffee via KakaoPay](https://qr.kakaopay.com/Ej8t3tRhG) _(Optional)_
 
 ---
 
-**Made with ❤️ by [Your Name]**
+**Made with ❤️ by 조르딘 (JoREDIN)**
 
 ⭐ Star this repo if you find it helpful!

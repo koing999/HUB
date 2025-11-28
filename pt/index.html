@@ -93,12 +93,7 @@
                 <a href="https://github.com/koing999/HUB" target="_blank" class="text-gray-400 hover:text-white">
                     <i class="fab fa-github text-xl"></i>
                 </a>
-                <div class="flex gap-2">
-                    <a href="../index.html" class="px-3 py-1 text-xs bg-slate-700 rounded">🇰🇷 한국어</a>
-                    <a href="../en/index.html" class="px-3 py-1 text-xs bg-slate-700 rounded">🇺🇸 English</a>
-                    <a href="../es/index.html" class="px-3 py-1 text-xs bg-slate-700 rounded">🇪🇸 Español</a>
-                    <span class="px-3 py-1 text-xs bg-green-600 rounded">🇧🇷 Português</span>
-                </div>
+
             </div>
         </div>
     </div>
@@ -116,31 +111,6 @@
                 <span>✅ Sem cadastro</span>
                 <span>✅ Código aberto</span>
                 <span>✅ Dados seguros (local)</span>
-            </div>
-        </div>
-
-        <!-- Currency Selection - RHINO REVOLVER -->
-        <div class="mb-5 p-4 bg-slate-800/80 rounded-xl border border-slate-600 shadow-lg">
-            <div class="flex justify-between items-center mb-3">
-                <label class="text-sm font-bold text-green-400 flex items-center gap-2">
-                    <i class="fas fa-coins"></i> Modo de Moeda
-                </label>
-                <span class="text-xs text-gray-500 font-mono">CAL. MULTI</span>
-            </div>
-            
-            <div class="grid grid-cols-4 gap-2">
-                <button onclick="changeCurrency('R$')" class="currency-trigger px-3 py-2 bg-green-600 text-white rounded-lg text-sm font-bold border border-green-500 shadow-md transition hover:scale-105" data-val="R$">
-                    R$ BRL
-                </button>
-                <button onclick="changeCurrency('€')" class="currency-trigger px-3 py-2 bg-slate-700 text-gray-300 rounded-lg text-sm font-bold border border-slate-600 hover:bg-slate-600 transition" data-val="€">
-                    € EUR
-                </button>
-                <button onclick="changeCurrency('$')" class="currency-trigger px-3 py-2 bg-slate-700 text-gray-300 rounded-lg text-sm font-bold border border-slate-600 hover:bg-slate-600 transition" data-val="$">
-                    $ USD
-                </button>
-                <button onclick="changeCurrency('₩')" class="currency-trigger px-3 py-2 bg-slate-700 text-gray-300 rounded-lg text-sm font-bold border border-slate-600 hover:bg-slate-600 transition" data-val="₩">
-                    ₩ KRW
-                </button>
             </div>
         </div>
 
@@ -389,29 +359,8 @@
     </div>
 
     <script>
-        // [RHINO REVOLVER] 🔫 Currency Configuration (Default: BRL for Brazil market)
-        let currentSymbol = "R$"; 
-
-        function changeCurrency(symbol) {
-            currentSymbol = symbol;
-            
-            // 1. Button color change (clicked = green, others = gray)
-            document.querySelectorAll('.currency-trigger').forEach(btn => {
-                if(btn.dataset.val === symbol) {
-                    btn.className = "currency-trigger px-3 py-2 bg-green-600 text-white rounded-lg text-sm font-bold border border-green-500 shadow-md transition transform scale-105";
-                } else {
-                    btn.className = "currency-trigger px-3 py-2 bg-slate-700 text-gray-300 rounded-lg text-sm font-bold border border-slate-600 hover:bg-slate-600 transition";
-                }
-            });
-
-            // 2. Immediate recalculation (screen refresh)
-            if (document.getElementById('results-section').style.display !== 'none') {
-                calculate(); 
-            }
-            
-            // 3. Feedback (Toast)
-            showToast(`Moeda alterada para ${symbol}`);
-        }
+        // Currency Configuration - Fixed to BRL (Brazilian Real)
+        const currentSymbol = "R$"; 
 
         // Global variables
         let revenueChart, fcfChart, monteCarloChart;

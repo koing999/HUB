@@ -69,6 +69,25 @@ Perfect for:
 
 ---
 
+## 💱 Multi-Currency Support
+
+**Works with ANY currency!** 
+
+The dashboard is currency-agnostic - simply enter your amounts in your preferred currency:
+- 💵 **USD** - US Dollars
+- 💶 **EUR** - Euros  
+- 💷 **GBP** - British Pounds
+- 💴 **JPY** - Japanese Yen
+- 🇰🇷 **KRW** - Korean Won
+- 🇧🇷 **BRL** - Brazilian Real
+- 🇲🇽 **MXN** - Mexican Peso
+- 🇨🇳 **CNY** - Chinese Yuan
+- **Or any other currency!**
+
+💡 **Tip**: Just use the same currency for all inputs (investment, revenue, etc.) and your results will be in that currency.
+
+---
+
 ## 📖 How to Use
 
 ### 1. Basic Setup

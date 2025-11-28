@@ -1,0 +1,366 @@
+ 1	<!DOCTYPE html>
+     2	<html lang="en">
+     3	<head>
+     4	    <meta charset="UTF-8">
+     5	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     6	    <title>Investment Analysis Dashboard - Free NPV/IRR Calculator for Startups</title>
+     7	    <meta name="description" content="Free web-based investment analysis tool. Calculate NPV, IRR, Monte Carlo simulation in 30 seconds. Perfect for startup IR, financial modeling, and investment decisions.">
+     8	    <script src="https://cdn.tailwindcss.com"></script>
+     9	    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    10	    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    11	    <style>
+    12	        * { font-family: 'Inter', sans-serif; }
+    13	        body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    14	        .gradient-text { 
+    15	            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    16	            -webkit-background-clip: text;
+    17	            -webkit-text-fill-color: transparent;
+    18	        }
+    19	        .card-hover {
+    20	            transition: all 0.3s ease;
+    21	        }
+    22	        .card-hover:hover {
+    23	            transform: translateY(-5px);
+    24	            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    25	        }
+    26	    </style>
+    27	</head>
+    28	<body class="min-h-screen">
+    29	    <!-- Hero Section -->
+    30	    <div class="container mx-auto px-6 py-16">
+    31	        <div class="text-center mb-16">
+    32	            <h1 class="text-5xl md:text-6xl font-bold text-white mb-6">
+    33	                💎 Investment Analysis Dashboard
+    34	            </h1>
+    35	            <p class="text-xl md:text-2xl text-purple-100 mb-8">
+    36	                Complete your IR materials in 30 seconds<br>
+    37	                Free, No Installation, 100% Browser-Based
+    38	            </p>
+    39	            <div class="flex flex-col md:flex-row gap-4 justify-center items-center">
+    40	                <a href="./index.html" class="px-8 py-4 bg-white text-purple-600 rounded-xl font-bold text-lg hover:bg-purple-50 transition shadow-lg">
+    41	                    🚀 Launch Dashboard
+    42	                </a>
+    43	                <a href="https://github.com/koing999/HUB" target="_blank" class="px-8 py-4 bg-purple-800 text-white rounded-xl font-bold text-lg hover:bg-purple-700 transition shadow-lg">
+    44	                    <i class="fab fa-github"></i> View on GitHub
+    45	                </a>
+    46	            </div>
+    47	        </div>
+    48	
+    49	        <!-- Key Features -->
+    50	        <div class="grid md:grid-cols-3 gap-6 mb-16">
+    51	            <div class="bg-white rounded-2xl p-8 card-hover">
+    52	                <div class="text-4xl mb-4">⚡</div>
+    53	                <h3 class="text-2xl font-bold mb-3 gradient-text">Lightning Fast</h3>
+    54	                <p class="text-gray-600">
+    55	                    Complete NPV/IRR analysis in 30 seconds. No complex setup, no learning curve. Just open and start analyzing.
+    56	                </p>
+    57	            </div>
+    58	            <div class="bg-white rounded-2xl p-8 card-hover">
+    59	                <div class="text-4xl mb-4">🎲</div>
+    60	                <h3 class="text-2xl font-bold mb-3 gradient-text">Monte Carlo Simulation</h3>
+    61	                <p class="text-gray-600">
+    62	                    Run 1,000 iterations instantly. Visualize risk distribution with P10/P50/P90 percentiles for data-driven decisions.
+    63	                </p>
+    64	            </div>
+    65	            <div class="bg-white rounded-2xl p-8 card-hover">
+    66	                <div class="text-4xl mb-4">🎯</div>
+    67	                <h3 class="text-2xl font-bold mb-3 gradient-text">2-Way Sensitivity</h3>
+    68	                <p class="text-gray-600">
+    69	                    Cross-analyze Revenue × WACC with real NPV recalculation. Understand impact of multiple variables simultaneously.
+    70	                </p>
+    71	            </div>
+    72	        </div>
+    73	
+    74	        <!-- Core Features Grid -->
+    75	        <div class="bg-white rounded-3xl p-8 md:p-12 mb-16 shadow-2xl">
+    76	            <h2 class="text-3xl font-bold text-center mb-10 gradient-text">
+    77	                🔥 Everything You Need for Investment Analysis
+    78	            </h2>
+    79	            <div class="grid md:grid-cols-2 gap-8">
+    80	                <!-- Left Column -->
+    81	                <div class="space-y-6">
+    82	                    <div class="flex items-start gap-4">
+    83	                        <div class="text-2xl">📊</div>
+    84	                        <div>
+    85	                            <h4 class="font-bold text-lg mb-2">Automatic NPV/IRR Calculation</h4>
+    86	                            <p class="text-gray-600 text-sm">Newton-Raphson method with 0.01% precision. Handles negative cash flows and complex scenarios.</p>
+    87	                        </div>
+    88	                    </div>
+    89	                    <div class="flex items-start gap-4">
+    90	                        <div class="text-2xl">🧮</div>
+    91	                        <div>
+    92	                            <h4 class="font-bold text-lg mb-2">WACC Calculator</h4>
+    93	                            <p class="text-gray-600 text-sm">Built-in CAPM calculator, Beta adjustment (Hamada), industry presets for quick setup.</p>
+    94	                        </div>
+    95	                    </div>
+    96	                    <div class="flex items-start gap-4">
+    97	                        <div class="text-2xl">📈</div>
+    98	                        <div>
+    99	                            <h4 class="font-bold text-lg mb-2">Revenue Generation</h4>
+   100	                            <p class="text-gray-600 text-sm">Auto-generate projections by CAGR or upload Excel data. Supports up to 20-year analysis.</p>
+   101	                        </div>
+   102	                    </div>
+   103	                    <div class="flex items-start gap-4">
+   104	                        <div class="text-2xl">💰</div>
+   105	                        <div>
+   106	                            <h4 class="font-bold text-lg mb-2">Terminal Value Methods</h4>
+   107	                            <p class="text-gray-600 text-sm">Choose from Liquidation Value, Perpetual Growth, or Exit Multiple methods.</p>
+   108	                        </div>
+   109	                    </div>
+   110	                </div>
+   111	
+   112	                <!-- Right Column -->
+   113	                <div class="space-y-6">
+   114	                    <div class="flex items-start gap-4">
+   115	                        <div class="text-2xl">🎭</div>
+   116	                        <div>
+   117	                            <h4 class="font-bold text-lg mb-2">Scenario Comparison</h4>
+   118	                            <p class="text-gray-600 text-sm">Conservative/Base/Optimistic scenarios. Compare multiple outcomes side-by-side.</p>
+   119	                        </div>
+   120	                    </div>
+   121	                    <div class="flex items-start gap-4">
+   122	                        <div class="text-2xl">📉</div>
+   123	                        <div>
+   124	                            <h4 class="font-bold text-lg mb-2">Break-Even & Payback</h4>
+   125	                            <p class="text-gray-600 text-sm">Automatic calculation of payback period and break-even point based on cumulative FCF.</p>
+   126	                        </div>
+   127	                    </div>
+   128	                    <div class="flex items-start gap-4">
+   129	                        <div class="text-2xl">📥</div>
+   130	                        <div>
+   131	                            <h4 class="font-bold text-lg mb-2">Excel Export</h4>
+   132	                            <p class="text-gray-600 text-sm">Download complete FCF table + summary sheet. Ready for presentations and reports.</p>
+   133	                        </div>
+   134	                    </div>
+   135	                    <div class="flex items-start gap-4">
+   136	                        <div class="text-2xl">🖨️</div>
+   137	                        <div>
+   138	                            <h4 class="font-bold text-lg mb-2">PDF Export</h4>
+   139	                            <p class="text-gray-600 text-sm">One-click print to PDF. Include all charts and tables for investor presentations.</p>
+   140	                        </div>
+   141	                    </div>
+   142	                </div>
+   143	            </div>
+   144	        </div>
+   145	
+   146	        <!-- Technical Stack -->
+   147	        <div class="bg-white rounded-3xl p-8 md:p-12 mb-16 shadow-2xl">
+   148	            <h2 class="text-3xl font-bold text-center mb-10 gradient-text">
+   149	                🛠️ Built with Modern Web Technologies
+   150	            </h2>
+   151	            <div class="grid md:grid-cols-4 gap-6 text-center">
+   152	                <div class="p-6 bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl">
+   153	                    <div class="text-3xl mb-3">🌐</div>
+   154	                    <h4 class="font-bold mb-2">Pure HTML5</h4>
+   155	                    <p class="text-sm text-gray-600">No backend required</p>
+   156	                </div>
+   157	                <div class="p-6 bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl">
+   158	                    <div class="text-3xl mb-3">🎨</div>
+   159	                    <h4 class="font-bold mb-2">Tailwind CSS</h4>
+   160	                    <p class="text-sm text-gray-600">Beautiful UI design</p>
+   161	                </div>
+   162	                <div class="p-6 bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl">
+   163	                    <div class="text-3xl mb-3">📊</div>
+   164	                    <h4 class="font-bold mb-2">Chart.js</h4>
+   165	                    <p class="text-sm text-gray-600">Interactive charts</p>
+   166	                </div>
+   167	                <div class="p-6 bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl">
+   168	                    <div class="text-3xl mb-3">📑</div>
+   169	                    <h4 class="font-bold mb-2">SheetJS</h4>
+   170	                    <p class="text-sm text-gray-600">Excel integration</p>
+   171	                </div>
+   172	            </div>
+   173	        </div>
+   174	
+   175	        <!-- Who Is This For -->
+   176	        <div class="bg-gradient-to-br from-purple-900 to-indigo-900 rounded-3xl p-8 md:p-12 mb-16 shadow-2xl text-white">
+   177	            <h2 class="text-3xl font-bold text-center mb-10">
+   178	                👥 Perfect For
+   179	            </h2>
+   180	            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+   181	                <div class="bg-white/10 backdrop-blur rounded-xl p-6 text-center">
+   182	                    <div class="text-4xl mb-4">🚀</div>
+   183	                    <h4 class="font-bold text-lg mb-2">Startup Founders</h4>
+   184	                    <p class="text-purple-200 text-sm">Quick IR materials for investor meetings</p>
+   185	                </div>
+   186	                <div class="bg-white/10 backdrop-blur rounded-xl p-6 text-center">
+   187	                    <div class="text-4xl mb-4">💼</div>
+   188	                    <h4 class="font-bold text-lg mb-2">Corporate Finance</h4>
+   189	                    <p class="text-purple-200 text-sm">Investment feasibility analysis</p>
+   190	                </div>
+   191	                <div class="bg-white/10 backdrop-blur rounded-xl p-6 text-center">
+   192	                    <div class="text-4xl mb-4">🎓</div>
+   193	                    <h4 class="font-bold text-lg mb-2">MBA Students</h4>
+   194	                    <p class="text-purple-200 text-sm">Financial modeling practice</p>
+   195	                </div>
+   196	                <div class="bg-white/10 backdrop-blur rounded-xl p-6 text-center">
+   197	                    <div class="text-4xl mb-4">📈</div>
+   198	                    <h4 class="font-bold text-lg mb-2">Consultants</h4>
+   199	                    <p class="text-purple-200 text-sm">Client presentation materials</p>
+   200	                </div>
+   201	            </div>
+   202	        </div>
+   203	
+   204	        <!-- Comparison Table -->
+   205	        <div class="bg-white rounded-3xl p-8 md:p-12 mb-16 shadow-2xl">
+   206	            <h2 class="text-3xl font-bold text-center mb-10 gradient-text">
+   207	                ⚖️ Why Choose Our Dashboard?
+   208	            </h2>
+   209	            <div class="overflow-x-auto">
+   210	                <table class="w-full text-left">
+   211	                    <thead class="border-b-2 border-purple-200">
+   212	                        <tr>
+   213	                            <th class="pb-4 font-bold">Feature</th>
+   214	                            <th class="pb-4 font-bold text-center">Our Dashboard</th>
+   215	                            <th class="pb-4 font-bold text-center">Excel</th>
+   216	                            <th class="pb-4 font-bold text-center">Commercial Tools</th>
+   217	                        </tr>
+   218	                    </thead>
+   219	                    <tbody class="divide-y divide-gray-200">
+   220	                        <tr>
+   221	                            <td class="py-4">Price</td>
+   222	                            <td class="py-4 text-center text-green-600 font-bold">FREE</td>
+   223	                            <td class="py-4 text-center text-gray-600">~$150/year</td>
+   224	                            <td class="py-4 text-center text-red-600">$1,500~3,000/year</td>
+   225	                        </tr>
+   226	                        <tr>
+   227	                            <td class="py-4">Installation</td>
+   228	                            <td class="py-4 text-center text-green-600">✅ None</td>
+   229	                            <td class="py-4 text-center text-yellow-600">⚠️ Required</td>
+   230	                            <td class="py-4 text-center text-yellow-600">⚠️ Required</td>
+   231	                        </tr>
+   232	                        <tr>
+   233	                            <td class="py-4">Monte Carlo</td>
+   234	                            <td class="py-4 text-center text-green-600">✅ 1000 iterations</td>
+   235	                            <td class="py-4 text-center text-red-600">❌ Manual</td>
+   236	                            <td class="py-4 text-center text-green-600">✅ Available</td>
+   237	                        </tr>
+   238	                        <tr>
+   239	                            <td class="py-4">2-Way Sensitivity</td>
+   240	                            <td class="py-4 text-center text-green-600">✅ Automatic</td>
+   241	                            <td class="py-4 text-center text-yellow-600">⚠️ Manual setup</td>
+   242	                            <td class="py-4 text-center text-green-600">✅ Available</td>
+   243	                        </tr>
+   244	                        <tr>
+   245	                            <td class="py-4">Real-time Charts</td>
+   246	                            <td class="py-4 text-center text-green-600">✅ Interactive</td>
+   247	                            <td class="py-4 text-center text-yellow-600">⚠️ Static</td>
+   248	                            <td class="py-4 text-center text-green-600">✅ Interactive</td>
+   249	                        </tr>
+   250	                        <tr>
+   251	                            <td class="py-4">Learning Curve</td>
+   252	                            <td class="py-4 text-center text-green-600">✅ 5 minutes</td>
+   253	                            <td class="py-4 text-center text-yellow-600">⚠️ 2-3 hours</td>
+   254	                            <td class="py-4 text-center text-red-600">❌ 1-2 days</td>
+   255	                        </tr>
+   256	                        <tr>
+   257	                            <td class="py-4">Open Source</td>
+   258	                            <td class="py-4 text-center text-green-600">✅ MIT License</td>
+   259	                            <td class="py-4 text-center text-red-600">❌ Proprietary</td>
+   260	                            <td class="py-4 text-center text-red-600">❌ Proprietary</td>
+   261	                        </tr>
+   262	                    </tbody>
+   263	                </table>
+   264	            </div>
+   265	        </div>
+   266	
+   267	        <!-- Quick Start Guide -->
+   268	        <div class="bg-white rounded-3xl p-8 md:p-12 mb-16 shadow-2xl">
+   269	            <h2 class="text-3xl font-bold text-center mb-10 gradient-text">
+   270	                🎯 Get Started in 3 Steps
+   271	            </h2>
+   272	            <div class="grid md:grid-cols-3 gap-8">
+   273	                <div class="text-center">
+   274	                    <div class="w-16 h-16 bg-purple-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">1</div>
+   275	                    <h4 class="font-bold text-xl mb-3">Enter Data</h4>
+   276	                    <p class="text-gray-600">Input initial investment, revenue, and basic assumptions. Or upload Excel file.</p>
+   277	                </div>
+   278	                <div class="text-center">
+   279	                    <div class="w-16 h-16 bg-purple-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">2</div>
+   280	                    <h4 class="font-bold text-xl mb-3">Click Analyze</h4>
+   281	                    <p class="text-gray-600">Hit "Run Analysis" button. NPV, IRR, and all metrics calculated instantly.</p>
+   282	                </div>
+   283	                <div class="text-center">
+   284	                    <div class="w-16 h-16 bg-purple-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">3</div>
+   285	                    <h4 class="font-bold text-xl mb-3">Export Results</h4>
+   286	                    <p class="text-gray-600">Download as Excel or PDF. Ready for presentations and reports.</p>
+   287	                </div>
+   288	            </div>
+   289	        </div>
+   290	
+   291	        <!-- FAQ Section -->
+   292	        <div class="bg-white rounded-3xl p-8 md:p-12 mb-16 shadow-2xl">
+   293	            <h2 class="text-3xl font-bold text-center mb-10 gradient-text">
+   294	                ❓ Frequently Asked Questions
+   295	            </h2>
+   296	            <div class="space-y-6 max-w-3xl mx-auto">
+   297	                <details class="bg-purple-50 rounded-xl p-6">
+   298	                    <summary class="font-bold text-lg cursor-pointer">Is it really free?</summary>
+   299	                    <p class="mt-4 text-gray-600">Yes! 100% free and open-source (MIT License). No hidden fees, no credit card required, no sign-up needed.</p>
+   300	                </details>
+   301	                <details class="bg-purple-50 rounded-xl p-6">
+   302	                    <summary class="font-bold text-lg cursor-pointer">Do I need to install anything?</summary>
+   303	                    <p class="mt-4 text-gray-600">No installation required. Just open in your browser (Chrome, Firefox, Safari, Edge). Works on desktop, tablet, and mobile.</p>
+   304	                </details>
+   305	                <details class="bg-purple-50 rounded-xl p-6">
+   306	                    <summary class="font-bold text-lg cursor-pointer">Is my data secure?</summary>
+   307	                    <p class="mt-4 text-gray-600">Absolutely. All calculations run locally in your browser. No data is sent to any server. Your financial data never leaves your computer.</p>
+   308	                </details>
+   309	                <details class="bg-purple-50 rounded-xl p-6">
+   310	                    <summary class="font-bold text-lg cursor-pointer">Can I use it for commercial purposes?</summary>
+   311	                    <p class="mt-4 text-gray-600">Yes! MIT License allows commercial use, modification, and distribution. Use it freely for your business, clients, or consulting work.</p>
+   312	                </details>
+   313	                <details class="bg-purple-50 rounded-xl p-6">
+   314	                    <summary class="font-bold text-lg cursor-pointer">How accurate are the calculations?</summary>
+   315	                    <p class="mt-4 text-gray-600">IRR uses Newton-Raphson method with 0.01% tolerance and 200 max iterations. NPV calculation follows standard DCF methodology. Monte Carlo runs 1,000 simulations.</p>
+   316	                </details>
+   317	                <details class="bg-purple-50 rounded-xl p-6">
+   318	                    <summary class="font-bold text-lg cursor-pointer">Can I customize it?</summary>
+   319	                    <p class="mt-4 text-gray-600">Yes! Open-source code on GitHub. Fork, modify, and customize as needed. Contributions welcome!</p>
+   320	                </details>
+   321	            </div>
+   322	        </div>
+   323	
+   324	        <!-- Call to Action -->
+   325	        <div class="bg-gradient-to-br from-purple-900 to-indigo-900 rounded-3xl p-8 md:p-16 text-center text-white shadow-2xl">
+   326	            <h2 class="text-4xl font-bold mb-6">
+   327	                Ready to Analyze Your Investment?
+   328	            </h2>
+   329	            <p class="text-xl text-purple-200 mb-8">
+   330	                Join thousands of users who trust our dashboard for their financial analysis
+   331	            </p>
+   332	            <div class="flex flex-col md:flex-row gap-4 justify-center items-center">
+   333	                <a href="./index.html" class="px-10 py-5 bg-white text-purple-600 rounded-xl font-bold text-xl hover:bg-purple-50 transition shadow-lg">
+   334	                    🚀 Launch Dashboard Now
+   335	                </a>
+   336	                <a href="https://github.com/koing999/HUB" target="_blank" class="px-10 py-5 bg-purple-700 text-white rounded-xl font-bold text-xl hover:bg-purple-600 transition shadow-lg">
+   337	                    <i class="fab fa-github"></i> Star on GitHub
+   338	                </a>
+   339	            </div>
+   340	        </div>
+   341	
+   342	        <!-- Footer -->
+   343	        <div class="mt-16 text-center text-white">
+   344	            <p class="text-lg mb-4">
+   345	                Made with ❤️ by <a href="https://github.com/koing999" class="font-bold hover:underline">JoREDIN</a>
+   346	            </p>
+   347	            <div class="flex justify-center gap-6 mb-4">
+   348	                <a href="https://github.com/koing999/HUB" class="hover:text-purple-200 transition">
+   349	                    <i class="fab fa-github text-2xl"></i>
+   350	                </a>
+   351	                <a href="mailto:koing756@naver.com" class="hover:text-purple-200 transition">
+   352	                    <i class="fas fa-envelope text-2xl"></i>
+   353	                </a>
+   354	            </div>
+   355	            <p class="text-purple-200 text-sm">
+   356	                Licensed under MIT License | © 2024 Investment Dashboard
+   357	            </p>
+   358	            <div class="mt-6">
+   359	                <a href="https://qr.kakaopay.com/Ej8t3tRhG" class="inline-block px-6 py-3 bg-yellow-400 text-gray-900 rounded-lg font-bold hover:bg-yellow-300 transition">
+   360	                    ☕ Support this project
+   361	                </a>
+   362	            </div>
+   363	        </div>
+   364	    </div>
+   365	</body>
+   366	</html>

@@ -110,7 +110,7 @@
                 <div class="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden">
                     <div class="flex border-b border-gray-700">
                         <button onclick="switchTab('basic')" id="tab-basic" class="flex-1 px-4 py-3 bg-blue-600 text-white font-semibold transition text-sm">
-                            📊 Basic
+                            📊 Basic Settings
                         </button>
                         <button onclick="switchTab('wacc')" id="tab-wacc" class="flex-1 px-4 py-3 bg-gray-700 hover:bg-gray-600 transition text-sm">
                             🧮 WACC
@@ -128,15 +128,15 @@
                             <div>
                                 <h3 class="text-sm font-semibold mb-2 text-green-300">📊 Upload Revenue Data</h3>
                                 <input type="file" id="excel-upload" accept=".xlsx, .xls" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-sm" onchange="handleExcelUpload(event)">
-                                <p class="text-xs text-gray-400 mt-1">* Automatically reads revenue data from Excel file</p>
+                                <p class="text-xs text-gray-400 mt-1">* Automatically reads revenue data from Excel</p>
                             </div>
 
                             <!-- CAGR-based Revenue Generation -->
                             <div>
-                                <h3 class="text-sm font-semibold mb-2 text-yellow-300">📈 Generate Revenue by CAGR</h3>
+                                <h3 class="text-sm font-semibold mb-2 text-yellow-300">📈 CAGR-based Revenue Generation</h3>
                                 <div class="grid grid-cols-2 gap-2 mb-2">
                                     <div>
-                                        <label class="text-xs text-gray-300">Initial Revenue ($M)</label>
+                                        <label class="text-xs text-gray-300">Base Year Revenue ($M)</label>
                                         <input type="number" id="initial-revenue" value="100" class="w-full px-2 py-1 bg-gray-700 border border-gray-600 rounded-lg mt-1 text-sm">
                                     </div>
                                     <div>
@@ -144,7 +144,7 @@
                                         <input type="number" id="cagr" value="15" step="0.1" class="w-full px-2 py-1 bg-gray-700 border border-gray-600 rounded-lg mt-1 text-sm">
                                     </div>
                                 </div>
-                                <button onclick="generateRevenue()" class="w-full px-3 py-2 bg-yellow-600 hover:bg-yellow-500 rounded-lg transition text-sm">Auto Generate</button>
+                                <button onclick="generateRevenue()" class="w-full px-3 py-2 bg-yellow-600 hover:bg-yellow-500 rounded-lg transition text-sm">Generate Revenue</button>
                             </div>
 
                             <!-- Basic Assumptions -->
@@ -171,9 +171,15 @@
                                             <input type="number" id="tax_rate" value="25" class="w-full px-2 py-1.5 bg-gray-700 border border-gray-600 rounded-lg mt-1 text-sm">
                                         </div>
                                     </div>
-                                    <div>
-                                        <label class="text-xs text-gray-300">NWC Ratio (% of Revenue)</label>
-                                        <input type="number" id="nwc_rate" value="10" step="0.1" class="w-full px-2 py-1.5 bg-gray-700 border border-gray-600 rounded-lg mt-1 text-sm">
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <div>
+                                            <label class="text-xs text-gray-300">CAPEX (% of Revenue)</label>
+                                            <input type="number" id="capex_rate" value="5" step="0.1" class="w-full px-2 py-1.5 bg-gray-700 border border-gray-600 rounded-lg mt-1 text-sm">
+                                        </div>
+                                        <div>
+                                            <label class="text-xs text-gray-300">NWC (% of Revenue)</label>
+                                            <input type="number" id="nwc_rate" value="10" step="0.1" class="w-full px-2 py-1.5 bg-gray-700 border border-gray-600 rounded-lg mt-1 text-sm">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -183,7 +189,7 @@
                         <div id="content-wacc" class="space-y-3 hidden">
                             <!-- Industry Preset -->
                             <div class="p-3 bg-gray-700 rounded-lg">
-                                <label class="text-xs text-gray-300 block mb-2 font-semibold">Industry Preset</label>
+                                <label class="text-xs text-gray-300 block mb-2 font-semibold">Industry Quick Apply</label>
                                 <select id="industry-preset" class="w-full px-2 py-1.5 bg-gray-600 border border-gray-500 rounded-lg text-sm" onchange="applyIndustryPreset()">
                                     <option value="">-- Select --</option>
                                     <option value="it">IT/Software (WACC ~8%)</option>
@@ -195,13 +201,13 @@
                             </div>
 
                             <div>
-                                <label class="text-xs text-gray-300">Discount Rate (WACC) (%)</label>
+                                <label class="text-xs text-gray-300">WACC (%)</label>
                                 <input type="number" id="discount_rate" value="10" step="0.1" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg mt-1">
                             </div>
                             
-                            <!-- Manual WACC Calculation -->
+                            <!-- WACC Manual Calculation -->
                             <div class="bg-gray-700 p-3 rounded-lg space-y-2">
-                                <h4 class="text-sm font-semibold text-blue-300">📐 Calculate WACC</h4>
+                                <h4 class="text-sm font-semibold text-blue-300">📐 WACC Direct Calculation</h4>
                                 
                                 <div class="grid grid-cols-2 gap-2">
                                     <div>
@@ -234,7 +240,7 @@
                                 
                                 <!-- CAPM -->
                                 <details class="bg-gray-600 p-2 rounded-lg">
-                                    <summary class="cursor-pointer text-xs font-semibold text-green-300 mb-2">CAPM Calculator</summary>
+                                    <summary class="cursor-pointer text-xs font-semibold text-green-300 mb-2">CAPM Calculation</summary>
                                     <div class="space-y-2 mt-2">
                                         <div class="grid grid-cols-3 gap-2">
                                             <div>
@@ -301,7 +307,7 @@
 
                 <!-- Calculate Button -->
                 <button onclick="calculate()" class="w-full px-6 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 rounded-xl text-lg font-bold transition shadow-lg">
-                    🚀 Run Analysis
+                    🚀 Start Analysis
                 </button>
             </div>
 
@@ -321,17 +327,17 @@
                         <p class="text-xs text-green-200 mt-1">%</p>
                     </div>
                     <div class="bg-gradient-to-br from-yellow-600 to-yellow-700 p-4 rounded-xl text-center">
-                        <p class="text-sm text-yellow-200">Payback</p>
+                        <p class="text-sm text-yellow-200">Payback Period</p>
                         <p id="payback-value" class="text-2xl font-bold mt-1">-</p>
                         <p class="text-xs text-yellow-200 mt-1">Years</p>
                     </div>
                     <div class="bg-gradient-to-br from-purple-600 to-purple-700 p-4 rounded-xl text-center">
-                        <p class="text-sm text-purple-200">Break-Even</p>
+                        <p class="text-sm text-purple-200">BEP</p>
                         <p id="bep-value" class="text-2xl font-bold mt-1">-</p>
                         <p class="text-xs text-purple-200 mt-1">Years</p>
                     </div>
                     <div id="verdict-card" class="bg-gradient-to-br from-gray-600 to-gray-700 p-4 rounded-xl text-center">
-                        <p class="text-sm text-gray-200">Decision</p>
+                        <p class="text-sm text-gray-200">Investment Decision</p>
                         <p id="verdict-value" class="text-2xl font-bold mt-1">-</p>
                     </div>
                 </div>
@@ -364,13 +370,12 @@
                                 </tr>
                             </thead>
                             <tbody id="scenario-table-body" class="divide-y divide-gray-700">
-                                <!-- Dynamic generation -->
                             </tbody>
                         </table>
                     </div>
                 </div>
 
-                <!-- Sensitivity Analysis (1-Way) -->
+                <!-- 1-Way Sensitivity Analysis -->
                 <div class="bg-gray-800 p-4 rounded-xl border border-gray-700">
                     <h2 class="text-lg font-semibold mb-3 text-yellow-300">🎯 Sensitivity Analysis (1-Way)</h2>
                     <div class="overflow-x-auto">
@@ -386,7 +391,6 @@
                                 </tr>
                             </thead>
                             <tbody id="sensitivity-table-body" class="divide-y divide-gray-700">
-                                <!-- Dynamic generation -->
                             </tbody>
                         </table>
                     </div>
@@ -394,16 +398,15 @@
 
                 <!-- 2-Way Sensitivity Analysis -->
                 <div class="bg-gray-800 p-4 rounded-xl border border-gray-700">
-                    <h2 class="text-lg font-semibold mb-3 text-orange-300">🎯🎯 2-Way Sensitivity (Revenue × WACC)</h2>
+                    <h2 class="text-lg font-semibold mb-3 text-orange-300">🎯🎯 2-Way Sensitivity Analysis (Revenue × WACC)</h2>
                     <div class="overflow-x-auto">
                         <table id="sensitivity-2way-table" class="sensitivity-table w-full">
-                            <!-- Dynamic generation -->
                         </table>
                     </div>
-                    <p class="text-xs text-gray-400 mt-2">* Green: NPV > 0 (Invest), Red: NPV < 0 (Don't Invest)</p>
+                    <p class="text-xs text-gray-400 mt-2">* Green: NPV > 0 (Investable), Red: NPV < 0 (Not Investable)</p>
                 </div>
 
-                <!-- Cash Flow Chart -->
+                <!-- Cashflow Chart -->
                 <div class="bg-gray-800 p-4 rounded-xl border border-gray-700">
                     <h2 class="text-lg font-semibold mb-3 text-green-300">📈 Cash Flow Chart</h2>
                     <div class="chart-container">
@@ -411,25 +414,25 @@
                     </div>
                 </div>
 
-                <!-- FCF Table -->
+                <!-- Annual FCF Table -->
                 <div class="bg-gray-800 p-4 rounded-xl border border-gray-700">
-                    <h2 class="text-lg font-semibold mb-3 text-purple-300">📋 Free Cash Flow by Year</h2>
+                    <h2 class="text-lg font-semibold mb-3 text-purple-300">📋 Annual Free Cash Flow</h2>
                     <div class="overflow-x-auto table-scroll">
                         <table class="w-full text-xs">
                             <thead class="bg-gray-700 sticky top-0">
                                 <tr>
                                     <th class="px-2 py-2">Year</th>
                                     <th class="px-2 py-2">Revenue</th>
-                                    <th class="px-2 py-2">EBIT</th>
+                                    <th class="px-2 py-2">Op. Profit</th>
                                     <th class="px-2 py-2">NOPAT</th>
-                                    <th class="px-2 py-2">Depreciation</th>
-                                    <th class="px-2 py-2">NWC Δ</th>
+                                    <th class="px-2 py-2">D&A</th>
+                                    <th class="px-2 py-2">CAPEX</th>
+                                    <th class="px-2 py-2">ΔNWC</th>
                                     <th class="px-2 py-2">FCF</th>
                                     <th class="px-2 py-2">Disc. FCF</th>
                                 </tr>
                             </thead>
                             <tbody id="fcf-table-body" class="divide-y divide-gray-700 text-center">
-                                <!-- Dynamic generation -->
                             </tbody>
                         </table>
                     </div>
@@ -454,7 +457,15 @@
             monteCarlo: null
         };
 
-        // Toast notification
+        // Number Formatter with Commas
+        function formatNumber(num, decimals = 1) {
+            return num.toLocaleString('en-US', { 
+                minimumFractionDigits: decimals, 
+                maximumFractionDigits: decimals 
+            });
+        }
+
+        // Toast Notification
         function showToast(message, type = 'success') {
             const toast = document.getElementById('toast');
             toast.textContent = message;
@@ -467,7 +478,7 @@
             }, 3000);
         }
 
-        // Tab switching
+        // Tab Switching
         function switchTab(tabName) {
             ['basic', 'wacc', 'scenario'].forEach(name => {
                 const btn = document.getElementById(`tab-${name}`);
@@ -483,14 +494,14 @@
             });
         }
 
-        // Dark mode toggle
+        // Dark Mode Toggle
         function toggleDarkMode() {
             document.body.classList.toggle('bg-gray-100');
             document.body.classList.toggle('text-gray-900');
             showToast('Dark mode toggled');
         }
 
-        // Terminal Value inputs
+        // TV Input Fields Dynamic Change
         function toggleTVInputs() {
             const method = document.getElementById('tv-method').value;
             const container = document.getElementById('tv-inputs');
@@ -505,19 +516,20 @@
             } else if (method === 'perpetual') {
                 container.innerHTML = `
                     <div>
-                        <label class="text-xs text-gray-300">Growth Rate (g) (%)</label>
+                        <label class="text-xs text-gray-300">Perpetual Growth Rate (g) (%)</label>
                         <input type="number" id="growth-rate" value="2" step="0.1" class="w-full px-2 py-1.5 bg-gray-700 border border-gray-600 rounded-lg mt-1 text-sm">
+                        <p class="text-xs text-yellow-300 mt-1">⚠️ Note: WACC must be greater than growth rate</p>
                     </div>
                 `;
             } else if (method === 'exit-multiple') {
                 container.innerHTML = `
                     <div class="grid grid-cols-2 gap-2">
                         <div>
-                            <label class="text-xs text-gray-300">Exit Multiple</label>
+                            <label class="text-xs text-gray-300">Exit Multiple (EV/EBITDA)</label>
                             <input type="number" id="exit-multiple" value="10" step="0.1" class="w-full px-2 py-1.5 bg-gray-700 border border-gray-600 rounded-lg mt-1 text-sm">
                         </div>
                         <div>
-                            <label class="text-xs text-gray-300">Metric</label>
+                            <label class="text-xs text-gray-300">Base Metric</label>
                             <select id="exit-metric" class="w-full px-2 py-1.5 bg-gray-700 border border-gray-600 rounded-lg mt-1 text-sm">
                                 <option value="ebitda">EBITDA</option>
                                 <option value="revenue">Revenue</option>
@@ -528,9 +540,10 @@
             }
         }
 
+        // Initialize TV Input Fields
         toggleTVInputs();
 
-        // Industry preset
+        // Industry Preset Application
         function applyIndustryPreset() {
             const industry = document.getElementById('industry-preset').value;
             const presets = {
@@ -546,11 +559,11 @@
                 document.getElementById('debt-weight').value = presets[industry].debtWeight;
                 document.getElementById('cost-of-debt').value = presets[industry].costOfDebt;
                 document.getElementById('cost-of-equity').value = presets[industry].costOfEquity;
-                showToast(`${industry.toUpperCase()} preset applied`);
+                showToast(`${industry.toUpperCase()} industry preset applied`);
             }
         }
 
-        // Beta adjustment (Hamada Formula)
+        // Beta Adjustment Calculation (Hamada Formula)
         function calculateReleverBeta() {
             const unleveredBeta = parseFloat(document.getElementById('unlevered-beta').value);
             const targetDE = parseFloat(document.getElementById('target-de').value) / 100;
@@ -562,7 +575,7 @@
             showToast(`Levered β = ${leveredBeta.toFixed(2)}`);
         }
 
-        // CAPM calculation
+        // CAPM Calculation
         function calculateCAPM() {
             const rf = parseFloat(document.getElementById('risk-free-rate').value) / 100;
             const rm = parseFloat(document.getElementById('market-return').value) / 100;
@@ -579,7 +592,7 @@
             showToast('Cost of equity calculated');
         }
 
-        // WACC calculation
+        // WACC Calculation
         function calculateWACC() {
             const debtWeight = parseFloat(document.getElementById('debt-weight').value) / 100;
             const equityWeight = 1 - debtWeight;
@@ -604,7 +617,7 @@
             showToast('WACC calculated!');
         }
 
-        // Excel upload
+        // Excel Upload
         function handleExcelUpload(e) {
             const file = e.target.files[0];
             if (!file) return;
@@ -616,7 +629,7 @@
                 const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
                 const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
                 
-                projectData.revenues = jsonData.slice(1).map(row => parseFloat(row[1]) || 0);
+                projectData.revenues = jsonData.slice(1).map(row => parseFloat(row[0]) || 0);
                 
                 showToast('Excel data uploaded!');
                 calculate();
@@ -624,7 +637,7 @@
             reader.readAsArrayBuffer(file);
         }
 
-        // Generate revenue by CAGR
+        // CAGR-based Revenue Generation
         function generateRevenue() {
             const initialRevenue = parseFloat(document.getElementById('initial-revenue').value);
             const cagr = parseFloat(document.getElementById('cagr').value) / 100;
@@ -638,7 +651,7 @@
             showToast('Revenue data generated!');
         }
 
-        // Apply scenario
+        // Scenario Application
         function applyScenario(scenario) {
             const scenarios = {
                 'conservative': { marginMultiplier: 0.8, wacc: 12 },
@@ -654,7 +667,7 @@
             calculate();
         }
 
-        // IRR calculation
+        // IRR Calculation (Improved Convergence Logic)
         function calculateIRR(cashflows) {
             let low = -0.99, high = 5.0;
             const tolerance = 0.0001;
@@ -682,13 +695,14 @@
             return ((low + high) / 2) * 100;
         }
 
-        // Quick NPV calculation
+        // Quick NPV Calculation
         function quickCalculateNPV() {
             const initialInvestment = parseFloat(document.getElementById('initial_investment').value);
             const period = parseInt(document.getElementById('analysis_period').value);
             const taxRate = parseFloat(document.getElementById('tax_rate').value) / 100;
             const discountRate = parseFloat(document.getElementById('discount_rate').value) / 100;
             const nwcRate = parseFloat(document.getElementById('nwc_rate').value) / 100;
+            const capexRate = parseFloat(document.getElementById('capex_rate').value) / 100;
             
             const revenues = projectData.revenues.length > 0 ? projectData.revenues : 
                              Array.from({length: period}, (_, i) => {
@@ -706,11 +720,12 @@
                 const operatingProfit = revenue * 0.2;
                 const nopat = operatingProfit * (1 - taxRate);
                 
+                const capex = revenue * capexRate;
                 const currentNWC = revenue * nwcRate;
                 const nwcIncrease = currentNWC - prevNWC;
                 prevNWC = currentNWC;
                 
-                let fcf = nopat + depreciation - nwcIncrease;
+                let fcf = nopat + depreciation - capex - nwcIncrease;
                 
                 if (year === period) {
                     fcf += currentNWC;
@@ -722,7 +737,7 @@
             return npv;
         }
 
-        // Main calculation
+        // Main Calculation Function
         function calculate() {
             try {
                 const initialInvestment = parseFloat(document.getElementById('initial_investment').value);
@@ -731,6 +746,7 @@
                 const taxRate = parseFloat(document.getElementById('tax_rate').value) / 100;
                 const discountRate = parseFloat(document.getElementById('discount_rate').value) / 100;
                 const nwcRate = parseFloat(document.getElementById('nwc_rate').value) / 100;
+                const capexRate = parseFloat(document.getElementById('capex_rate').value) / 100;
                 
                 if (projectData.revenues.length === 0) {
                     generateRevenue();
@@ -748,11 +764,12 @@
                     const operatingProfit = revenue * operatingMargin;
                     const nopat = operatingProfit * (1 - taxRate);
                     
+                    const capex = revenue * capexRate;
                     const currentNWC = revenue * nwcRate;
                     const nwcIncrease = currentNWC - prevNWC;
                     prevNWC = currentNWC;
                     
-                    let fcf = nopat + depreciation - nwcIncrease;
+                    let fcf = nopat + depreciation - capex - nwcIncrease;
                     
                     if (year === period) {
                         const tvMethod = document.getElementById('tv-method').value;
@@ -762,7 +779,14 @@
                             residual = parseFloat(document.getElementById('liquidation-value').value);
                         } else if (tvMethod === 'perpetual') {
                             const g = parseFloat(document.getElementById('growth-rate').value) / 100;
-                            const normalizedFCF = nopat + depreciation;
+                            
+                            // Validation: WACC must be greater than growth rate
+                            if (discountRate <= g) {
+                                showToast('Error: WACC must be greater than growth rate (g)', 'error');
+                                return;
+                            }
+                            
+                            const normalizedFCF = nopat + depreciation - capex;
                             const terminalValue = normalizedFCF * (1 + g) / (discountRate - g);
                             residual = terminalValue + currentNWC;
                         } else if (tvMethod === 'exit-multiple') {
@@ -784,6 +808,7 @@
                         operatingProfit,
                         nopat,
                         depreciation,
+                        capex,
                         nwcIncrease,
                         fcf,
                         discountedFCF
@@ -805,6 +830,7 @@
                     }
                 }
                 
+                // BEP Calculation
                 let cumulativeProfit = 0;
                 let bep = period;
                 for (let i = 0; i < fcfData.length; i++) {
@@ -816,12 +842,12 @@
                     }
                 }
                 
-                document.getElementById('npv-value').textContent = npv.toFixed(1);
-                document.getElementById('irr-value').textContent = irr.toFixed(2);
+                document.getElementById('npv-value').textContent = formatNumber(npv);
+                document.getElementById('irr-value').textContent = formatNumber(irr, 2);
                 document.getElementById('payback-value').textContent = paybackPeriod;
                 document.getElementById('bep-value').textContent = bep;
                 
-                const verdict = npv > 0 && irr > discountRate * 100 ? '✅ Invest' : '❌ Don\'t Invest';
+                const verdict = npv > 0 && irr > discountRate * 100 ? '✅ Invest' : '❌ Pass';
                 const verdictCard = document.getElementById('verdict-card');
                 document.getElementById('verdict-value').textContent = verdict;
                 verdictCard.className = npv > 0 ? 
@@ -838,11 +864,11 @@
                 
             } catch (error) {
                 console.error('Calculation error:', error);
-                showToast('Calculation error occurred', 'error');
+                showToast('An error occurred during calculation', 'error');
             }
         }
 
-        // Scenario comparison
+        // Scenario Comparison Table Update
         function updateScenarioComparison(baseNPV, baseIRR) {
             const scenarios = {
                 'conservative': { margin: 0.85, wacc: 12 },
@@ -856,7 +882,7 @@
             const metrics = [
                 { name: 'NPV ($M)', key: 'npv' },
                 { name: 'IRR (%)', key: 'irr' },
-                { name: 'Payback (Years)', key: 'payback' }
+                { name: 'Payback Period (Years)', key: 'payback' }
             ];
             
             metrics.forEach(metric => {
@@ -868,14 +894,14 @@
                     let value;
                     
                     if (metric.key === 'npv') {
-                        value = (baseNPV * multiplier).toFixed(1);
+                        value = formatNumber(baseNPV * multiplier);
                     } else if (metric.key === 'irr') {
-                        value = (baseIRR * multiplier).toFixed(2);
+                        value = formatNumber(baseIRR * multiplier, 2);
                     } else {
                         value = Math.max(1, Math.floor(5 / multiplier));
                     }
                     
-                    const color = parseFloat(value) > 0 ? 'text-green-400' : 'text-red-400';
+                    const color = parseFloat(value.replace(/,/g, '')) > 0 ? 'text-green-400' : 'text-red-400';
                     cells += `<td class="px-4 py-2 text-center ${color}">${value}</td>`;
                 });
                 
@@ -884,7 +910,7 @@
             });
         }
 
-        // 1-Way sensitivity
+        // 1-Way Sensitivity Analysis
         function calculate1WaySensitivity() {
             const tbody = document.getElementById('sensitivity-table-body');
             tbody.innerHTML = '';
@@ -896,7 +922,7 @@
             };
             
             const variables = [
-                { name: 'Initial Revenue', field: 'revenue', id: 'initial-revenue' },
+                { name: 'Base Year Revenue', field: 'revenue', id: 'initial-revenue' },
                 { name: 'WACC', field: 'wacc', id: 'discount_rate' },
                 { name: 'NWC Ratio', field: 'nwcRate', id: 'nwc_rate', isPercent: true }
             ];
@@ -922,7 +948,7 @@
                     document.getElementById(variable.id).value = originalValue;
                     
                     const color = npv > 0 ? 'text-green-400' : 'text-red-400';
-                    cells += `<td class="px-4 py-2 text-center ${color}">${npv.toFixed(1)}</td>`;
+                    cells += `<td class="px-4 py-2 text-center ${color}">${formatNumber(npv)}</td>`;
                 });
                 
                 row.innerHTML = cells;
@@ -930,7 +956,7 @@
             });
         }
 
-        // 2-Way sensitivity
+        // 2-Way Sensitivity Analysis
         function calculate2WaySensitivity() {
             const baseRevenue = parseFloat(document.getElementById('initial-revenue').value);
             const baseWACC = parseFloat(document.getElementById('discount_rate').value);
@@ -953,7 +979,7 @@
             const originalWACC = document.getElementById('discount_rate').value;
             
             revenueVariations.forEach(rv => {
-                const revenueValue = (baseRevenue * (1 + rv)).toFixed(0);
+                const revenueValue = formatNumber(baseRevenue * (1 + rv), 0);
                 let row = `<tr><td>$${revenueValue}M</td>`;
                 
                 waccVariations.forEach(wv => {
@@ -963,7 +989,7 @@
                     const npv = quickCalculateNPV();
                     
                     const cellClass = npv > 0 ? 'sensitivity-positive' : 'sensitivity-negative';
-                    row += `<td class="${cellClass}">${npv.toFixed(0)}</td>`;
+                    row += `<td class="${cellClass}">${formatNumber(npv, 0)}</td>`;
                 });
                 
                 row += '</tr>';
@@ -974,7 +1000,7 @@
             document.getElementById('discount_rate').value = originalWACC;
         }
 
-        // Cash flow chart
+        // Cash Flow Chart
         function updateCashflowChart(fcfData) {
             const ctx = document.getElementById('cashflow-chart').getContext('2d');
             
@@ -987,7 +1013,7 @@
                 data: {
                     labels: fcfData.map(d => `Y${d.year}`),
                     datasets: [{
-                        label: 'FCF',
+                        label: 'FCF ($M)',
                         data: fcfData.map(d => d.fcf),
                         backgroundColor: 'rgba(59, 130, 246, 0.6)',
                         borderColor: 'rgba(59, 130, 246, 1)',
@@ -1003,7 +1029,12 @@
                     scales: {
                         y: {
                             beginAtZero: true,
-                            ticks: { color: '#94a3b8' },
+                            ticks: { 
+                                color: '#94a3b8',
+                                callback: function(value) {
+                                    return '$' + formatNumber(value, 0) + 'M';
+                                }
+                            },
                             grid: { color: '#334155' }
                         },
                         x: {
@@ -1015,7 +1046,7 @@
             });
         }
 
-        // FCF table
+        // FCF Table Update
         function updateFCFTable(fcfData) {
             const tbody = document.getElementById('fcf-table-body');
             tbody.innerHTML = '';
@@ -1024,19 +1055,20 @@
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td class="px-2 py-2">${data.year}</td>
-                    <td class="px-2 py-2">${data.revenue.toFixed(1)}</td>
-                    <td class="px-2 py-2">${data.operatingProfit.toFixed(1)}</td>
-                    <td class="px-2 py-2">${data.nopat.toFixed(1)}</td>
-                    <td class="px-2 py-2">${data.depreciation.toFixed(1)}</td>
-                    <td class="px-2 py-2">${data.nwcIncrease.toFixed(1)}</td>
-                    <td class="px-2 py-2 font-bold">${data.fcf.toFixed(1)}</td>
-                    <td class="px-2 py-2 text-blue-400">${data.discountedFCF.toFixed(1)}</td>
+                    <td class="px-2 py-2">${formatNumber(data.revenue)}</td>
+                    <td class="px-2 py-2">${formatNumber(data.operatingProfit)}</td>
+                    <td class="px-2 py-2">${formatNumber(data.nopat)}</td>
+                    <td class="px-2 py-2">${formatNumber(data.depreciation)}</td>
+                    <td class="px-2 py-2">${formatNumber(data.capex)}</td>
+                    <td class="px-2 py-2">${formatNumber(data.nwcIncrease)}</td>
+                    <td class="px-2 py-2 font-bold">${formatNumber(data.fcf)}</td>
+                    <td class="px-2 py-2 text-blue-400">${formatNumber(data.discountedFCF)}</td>
                 `;
                 tbody.appendChild(row);
             });
         }
 
-        // Monte Carlo simulation
+        // Monte Carlo Simulation
         function runMonteCarloSimulation() {
             const simulations = 1000;
             const results = [];
@@ -1067,19 +1099,19 @@
             document.getElementById('mc-stats').innerHTML = `
                 <div class="bg-gray-700 p-2 rounded-lg">
                     <p class="text-xs text-gray-400">Mean NPV</p>
-                    <p class="text-base font-bold">${mean.toFixed(1)}</p>
+                    <p class="text-base font-bold">$${formatNumber(mean)}M</p>
                 </div>
                 <div class="bg-gray-700 p-2 rounded-lg">
                     <p class="text-xs text-gray-400">P10</p>
-                    <p class="text-base font-bold">${p10.toFixed(1)}</p>
+                    <p class="text-base font-bold">$${formatNumber(p10)}M</p>
                 </div>
                 <div class="bg-gray-700 p-2 rounded-lg">
                     <p class="text-xs text-gray-400">P50</p>
-                    <p class="text-base font-bold">${p50.toFixed(1)}</p>
+                    <p class="text-base font-bold">$${formatNumber(p50)}M</p>
                 </div>
                 <div class="bg-gray-700 p-2 rounded-lg">
                     <p class="text-xs text-gray-400">P90</p>
-                    <p class="text-base font-bold">${p90.toFixed(1)}</p>
+                    <p class="text-base font-bold">$${formatNumber(p90)}M</p>
                 </div>
             `;
             
@@ -1100,7 +1132,7 @@
             charts.monteCarlo = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: histogram.map((_, i) => ((Math.min(...results) + binSize * i)).toFixed(0)),
+                    labels: histogram.map((_, i) => formatNumber((Math.min(...results) + binSize * i), 0)),
                     datasets: [{
                         label: 'Frequency',
                         data: histogram,
@@ -1115,7 +1147,17 @@
                     plugins: { legend: { display: false } },
                     scales: {
                         y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
-                        x: { ticks: { color: '#94a3b8', maxRotation: 45, minRotation: 45 }, grid: { color: '#334155' } }
+                        x: { 
+                            ticks: { 
+                                color: '#94a3b8', 
+                                maxRotation: 45, 
+                                minRotation: 45,
+                                callback: function(value, index) {
+                                    return '$' + this.getLabelForValue(value) + 'M';
+                                }
+                            }, 
+                            grid: { color: '#334155' } 
+                        }
                     }
                 }
             });
@@ -1123,7 +1165,7 @@
             showToast('Monte Carlo simulation complete!');
         }
 
-        // Save project
+        // Project Save
         function saveProject() {
             const projectName = document.getElementById('project-name').value || 'untitled';
             const data = {
@@ -1137,7 +1179,7 @@
             showToast('Project saved!');
         }
 
-        // Load project
+        // Project Load
         function loadProject() {
             const projectName = document.getElementById('project-name').value;
             const data = localStorage.getItem(`project_${projectName}`);
@@ -1152,7 +1194,7 @@
             }
         }
 
-        // Download template (Enhanced version)
+        // Template Download (Enhanced Version)
         function downloadTemplate() {
             const wb = XLSX.utils.book_new();
             
@@ -1173,29 +1215,29 @@
             const ws = XLSX.utils.aoa_to_sheet(ws_data);
             XLSX.utils.book_append_sheet(wb, ws, "Revenue Data");
             
-            // 2. User Guide Sheet
+            // 2. Usage Guide Sheet
             const guide_data = [
-                ['📊 Excel Template User Guide'],
+                ['📊 Excel Template Usage Guide'],
                 [''],
-                ['1. How to Fill Out'],
+                ['1. How to Fill'],
                 ['   - Enter annual revenue in "Revenue Data" sheet'],
                 ['   - Column A: Year (1, 2, 3, ... in order)'],
-                ['   - Column B: Revenue (in $M - millions of dollars)'],
+                ['   - Column B: Revenue (in Million USD)'],
                 [''],
-                ['2. How to Upload'],
+                ['2. Upload Method'],
                 ['   - Select "Upload Revenue Data" in dashboard'],
-                ['   - Choose your completed Excel file'],
+                ['   - Choose your Excel file'],
                 ['   - Data will be imported automatically'],
                 [''],
                 ['3. Sample Data'],
-                ['   - Initial revenue: $100M'],
+                ['   - Base Year Revenue: $100M'],
                 ['   - CAGR: ~20% (Compound Annual Growth Rate)'],
                 ['   - Period: 10 years'],
                 [''],
-                ['4. Important Notes'],
-                ['   - Do not modify the first row (header)'],
-                ['   - Enter numbers only for revenue (in millions)'],
-                ['   - Maximum 20 years input supported'],
+                ['4. Notes'],
+                ['   - Do not modify the header row'],
+                ['   - Enter numbers only (in Million USD)'],
+                ['   - Maximum 20 years supported'],
                 ['   - Empty rows will be ignored'],
                 [''],
                 ['5. Contact'],
@@ -1203,21 +1245,21 @@
                 ['   - Email: koing756@naver.com']
             ];
             const ws_guide = XLSX.utils.aoa_to_sheet(guide_data);
-            XLSX.utils.book_append_sheet(wb, ws_guide, "User Guide");
+            XLSX.utils.book_append_sheet(wb, ws_guide, "Usage Guide");
             
             // 3. CAGR Reference Sheet
             const cagr_data = [
                 ['CAGR Reference Table'],
                 [''],
-                ['Initial Revenue', 'CAGR', 'Revenue after 10 Years'],
+                ['Base Revenue', 'CAGR', '10-Year Revenue'],
                 [100, '10%', 259],
                 [100, '15%', 405],
                 [100, '20%', 619],
                 [100, '25%', 931],
                 [100, '30%', 1379],
                 [''],
-                ['💡 Tip: Use "Generate Revenue by CAGR" feature in the dashboard'],
-                ['to automatically create revenue data!']
+                ['💡 Tip: Use "CAGR-based Revenue Generation" feature in dashboard'],
+                ['to automatically generate revenue projections!']
             ];
             const ws_cagr = XLSX.utils.aoa_to_sheet(cagr_data);
             XLSX.utils.book_append_sheet(wb, ws_cagr, "CAGR Reference");
@@ -1227,7 +1269,7 @@
             showToast('Template downloaded! 📊', 'success');
         }
 
-        // Download Excel results
+        // Excel Download
         function downloadExcel() {
             const tbody = document.getElementById('fcf-table-body');
             if (!tbody || tbody.children.length === 0) {
@@ -1238,11 +1280,11 @@
             const wb = XLSX.utils.book_new();
             
             const fcfData = [
-                ['Year', 'Revenue', 'EBIT', 'NOPAT', 'Depreciation', 'NWC Δ', 'FCF', 'Disc. FCF']
+                ['Year', 'Revenue', 'Op. Profit', 'NOPAT', 'D&A', 'CAPEX', 'ΔNWC', 'FCF', 'Disc. FCF']
             ];
             
             Array.from(tbody.children).forEach(row => {
-                const cells = Array.from(row.children).map(cell => cell.textContent.trim());
+                const cells = Array.from(row.children).map(cell => cell.textContent.trim().replace(/,/g, ''));
                 fcfData.push(cells);
             });
             
@@ -1253,18 +1295,18 @@
                 ['Investment Analysis Summary'],
                 [''],
                 ['Metric', 'Value', 'Unit'],
-                ['NPV', document.getElementById('npv-value').textContent, '$M'],
-                ['IRR', document.getElementById('irr-value').textContent, '%'],
+                ['NPV', document.getElementById('npv-value').textContent.replace(/,/g, ''), '$M'],
+                ['IRR', document.getElementById('irr-value').textContent.replace(/,/g, ''), '%'],
                 ['Payback Period', document.getElementById('payback-value').textContent, 'Years'],
-                ['Break-Even', document.getElementById('bep-value').textContent, 'Years'],
-                ['Decision', document.getElementById('verdict-value').textContent, '']
+                ['BEP', document.getElementById('bep-value').textContent, 'Years'],
+                ['Investment Decision', document.getElementById('verdict-value').textContent, '']
             ];
             
             const ws2 = XLSX.utils.aoa_to_sheet(summaryData);
             XLSX.utils.book_append_sheet(wb, ws2, "Summary");
             
             const projectName = document.getElementById('project-name').value || 'investment_analysis';
-            XLSX.writeFile(wb, `${projectName}_results.xlsx`);
+            XLSX.writeFile(wb, `${projectName}_analysis_results.xlsx`);
             
             showToast('Excel downloaded!');
         }

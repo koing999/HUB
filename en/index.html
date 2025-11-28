@@ -361,6 +361,21 @@
                     </div>
                 </div>
 
+                <!-- Support Banner (shown after successful analysis) -->
+                <div id="support-banner" class="hidden bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-200 rounded-xl p-4 relative">
+                    <button onclick="document.getElementById('support-banner').classList.add('hidden'); localStorage.setItem('supportBannerDismissed', 'true');" class="absolute top-2 right-2 text-gray-400 hover:text-gray-600 text-xl leading-none">×</button>
+                    <div class="flex items-center gap-4">
+                        <div class="text-4xl">☕</div>
+                        <div class="flex-1">
+                            <p class="font-bold text-gray-800 mb-1">Analysis saved you hours of work!</p>
+                            <p class="text-sm text-gray-600">If this tool helped you, consider buying me a coffee ☕</p>
+                        </div>
+                        <a href="https://paypal.me/LOCUJO" target="_blank" class="px-6 py-2 bg-blue-500 text-white rounded-lg font-bold hover:bg-blue-600 transition whitespace-nowrap">
+                            Support
+                        </a>
+                    </div>
+                </div>
+
                 <!-- Monte Carlo Simulation -->
                 <div class="bg-gray-800 p-4 rounded-xl border border-gray-700">
                     <div class="flex justify-between items-center mb-3">
@@ -878,6 +893,13 @@
                 updateScenarioComparison(npv, irr);
                 calculate1WaySensitivity();
                 calculate2WaySensitivity();
+                
+                // Show support banner only on positive NPV (successful investment)
+                if (npv > 0 && !localStorage.getItem('supportBannerDismissed')) {
+                    setTimeout(() => {
+                        document.getElementById('support-banner').classList.remove('hidden');
+                    }, 1000);
+                }
                 
                 showToast('Analysis complete!', 'success');
                 

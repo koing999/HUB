@@ -149,18 +149,61 @@ WACC = (E/V × Re) + (D/V × Rd × (1-Tc))
 
 ---
 
-## 📞 문의 및 지원
+## 💖 프로젝트 후원하기
 
-### 💬 연락처
-- **이메일**: koing756@naver.com
-- **GitHub Issues**: [문제 제보 및 기능 제안](https://github.com/koing999/HUB/issues)
+이 프로젝트가 도움이 되셨나요? ☕
 
-### ☕️ 프로젝트 후원
-이 프로젝트가 도움이 되셨다면 커피 한 잔 후원 부탁드립니다!
+### ⚡ 간편 후원 (PayPal)
+전 세계 어디서나 즉시 후원 가능!
 
-- **카카오페이**: [후원하기](https://qr.kakaopay.com/Ej8t3tRhG)
+<a href="https://paypal.me/LOCUJO" target="_blank">
+  <img src="https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white" alt="PayPal로 후원하기">
+</a>
 
-*후원금은 프로젝트 개선 및 유지보수에 사용됩니다.* 🙏
+👉 **[paypal.me/LOCUJO](https://paypal.me/LOCUJO)**
+
+---
+
+### 💎 정기 후원 (GitHub Sponsors)
+월 정기 후원으로 지속 가능한 개발을 지원해주세요!
+
+<a href="https://github.com/sponsors/koing999" target="_blank">
+  <img src="https://img.shields.io/badge/GitHub_Sponsors-EA4AAA?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Sponsors로 후원하기">
+</a>
+
+---
+
+### 🙏 여러분의 후원은 이렇게 사용됩니다
+
+- 🚀 **새로운 기능 개발**
+  - 고급 시나리오 분석 도구
+  - AI 기반 투자 추천
+  - 실시간 데이터 연동
+
+- 📚 **문서 및 튜토리얼 개선**
+  - 사용 가이드 영상 제작
+  - 케이스 스터디 추가
+  - 다국어 지원 확대
+
+- 🐛 **버그 수정 및 안정성 개선**
+  - 빠른 이슈 대응
+  - 성능 최적화
+  - 보안 강화
+
+- 💬 **커뮤니티 지원**
+  - 기술 지원
+  - 기능 요청 반영
+  - 정기 업데이트
+
+감사합니다! 🙏
+
+---
+
+## 📧 문의
+
+- **Email**: koing756@naver.com
+- **GitHub Issues**: [이슈 등록하기](https://github.com/koing999/HUB/issues)
+- **후원 문의**: koing756@naver.com
 
 ---
 

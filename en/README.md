@@ -251,12 +251,61 @@ This project is licensed under the **MIT License** - see the [LICENSE](../LICENS
 
 ---
 
+## 💖 Support This Project
+
+Find this project helpful? ☕
+
+### ⚡ Quick Support (PayPal)
+Support from anywhere in the world, instantly!
+
+<a href="https://paypal.me/LOCUJO" target="_blank">
+  <img src="https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white" alt="Support via PayPal">
+</a>
+
+👉 **[paypal.me/LOCUJO](https://paypal.me/LOCUJO)**
+
+---
+
+### 💎 Monthly Sponsorship (GitHub Sponsors)
+Support sustainable development with monthly sponsorship!
+
+<a href="https://github.com/sponsors/koing999" target="_blank">
+  <img src="https://img.shields.io/badge/GitHub_Sponsors-EA4AAA?style=for-the-badge&logo=github&logoColor=white" alt="Sponsor on GitHub">
+</a>
+
+---
+
+### 🙏 Your Support Helps
+
+- 🚀 **New Feature Development**
+  - Advanced scenario analysis tools
+  - AI-powered investment recommendations
+  - Real-time data integration
+
+- 📚 **Documentation & Tutorials**
+  - Video guides
+  - Case studies
+  - Multi-language support
+
+- 🐛 **Bug Fixes & Stability**
+  - Fast issue response
+  - Performance optimization
+  - Security enhancements
+
+- 💬 **Community Support**
+  - Technical support
+  - Feature requests
+  - Regular updates
+
+Thank you for your support! 🙏
+
+---
+
 ## 📧 Contact
 
-**JoREDIN (조르딘)**
-- 🐙 GitHub: [@koing999](https://github.com/koing999)
-- 📧 Email: koing756@naver.com
-- 💰 Support: [KakaoPay](https://qr.kakaopay.com/Ej8t3tRhG)
+- **Email**: koing756@naver.com
+- **GitHub Issues**: [Report an Issue](https://github.com/koing999/HUB/issues)
+- **Sponsorship Inquiries**: koing756@naver.com
 
 ---
 
